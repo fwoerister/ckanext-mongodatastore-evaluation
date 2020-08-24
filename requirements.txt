@@ -1,0 +1,11 @@
+ckanapi
+formencode
+pylons
+vdm
+docker
+flask_babel
+sqlalchemy
+psycopg2-binary
+gitpython
+python-gitlab
+pymongo
