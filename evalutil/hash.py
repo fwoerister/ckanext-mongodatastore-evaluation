@@ -32,5 +32,5 @@ def verify_hash(obj, expected_hash):
 
 
 def verify_all_elements_have_same_hash(values, hash_func):
-    results = values(map(lambda result: hash_func(result), values))
+    results = list(map(lambda value: hash_func(value), values))
     assert all(result_hash == results[0] for result_hash in results)
