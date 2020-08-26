@@ -42,7 +42,7 @@ class RandomQueryGenerator:
         parts = filename.split('_')
         return '_'.join(parts[1:])
 
-    def generate_random_queries(self, size=1):
+    def generate_random_queries(self, size=1, fields=None):
         queries = []
 
         for i in range(0, size):
@@ -50,11 +50,14 @@ class RandomQueryGenerator:
 
         return queries
 
-    def _generate_random_query(self, number_of_fields=4):
+    def _generate_random_query(self, number_of_fields=4, fields=None):
         query = {}
 
         for i in range(0, number_of_fields):
-            field = random.choice(list(self.value_dict.keys()))
+            if fields:
+                field = random.choice(fields)
+            else:
+                field = random.choice(list(self.value_dict.keys()))
             filter_value = random.choice(self.value_dict[field])
             query[field] = filter_value
 

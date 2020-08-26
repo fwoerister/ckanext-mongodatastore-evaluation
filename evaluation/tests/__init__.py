@@ -59,10 +59,11 @@ class GenericFunctionalTest(GenericTest, ABC):
 
 
 class GenericNonFunctionalTest(GenericTest, ABC):
-    def __init__(self, results_dir, name, dataset, chunksize):
+    def __init__(self, results_dir, name, dataset, chunksize, test_interval):
         super(GenericNonFunctionalTest, self).__init__(results_dir, name)
         self._dataset = dataset
         self._chunksize = chunksize
+        self._test_interval = test_interval
         self._resource_id = None
         self._random_query_generator = RandomQueryGenerator(RANDOM_SEED)
 
@@ -74,13 +75,15 @@ class GenericNonFunctionalTest(GenericTest, ABC):
     def _do_evaluation(self):
         pass
 
+    def _after_upload(self):
+        pass
+
     def run(self):
         self.logger.info(f"⏳ Start execution of '{self.name}' ⏳ ")
 
         self.logger.info("check preconditions...")
         self._prepare_preconditions()
         self.logger.info("preconditions are fulfilled")
-
 
         with open(self._dataset) as trace_file:
             with open(os.path.join(self.results_dir, 'csv', 'insert_time.csv'), 'w') as insert_time_file:
@@ -98,8 +101,10 @@ class GenericNonFunctionalTest(GenericTest, ABC):
                         insert_time_file.writelines(f'{response_time}\n')
                         insert_time_file.flush()
 
-                        self.logger.info(f'📈 perform evaluation - ({line_count} records uploaded) 📈 ')
-                        self._do_evaluation()
+                        if line_count & self._test_interval == 0:
+                            self.logger.info(f'📈 perform evaluation - ({line_count} records uploaded) 📈 ')
+                            self._do_evaluation()
+                            self.logger.info('evaluation done ✅ ')
 
                         records = []
 
@@ -113,5 +118,8 @@ class GenericNonFunctionalTest(GenericTest, ABC):
 
                     self.logger.info(f'📈 perform evaluation - ({line_count} records uploaded) 📈 ')
                     self._do_evaluation()
+                    self.logger.info('evaluation done ✅ ')
+
+        self._after_upload()
 
         self.logger.info(f"🎉 '{self.name}' successfully executed 🎉 ")
