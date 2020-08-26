@@ -30,8 +30,8 @@ def ensure_package_does_not_exist(pkg_name):
 
 def verify_package_does_exist(pkg_name):
     try:
-        client.action.package_show(id=pkg_name)
-        found = True
+        pkg = client.action.package_show(id=pkg_name)
+        return pkg['id']
     except NotFound as e:
         raise AssertionError(e)
 

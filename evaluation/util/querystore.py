@@ -4,7 +4,7 @@ import logging
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from evalutil.model import Query
+from evaluation.util.model import Query
 
 logger = logging.getLogger(__name__)
 

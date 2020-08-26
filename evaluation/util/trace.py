@@ -26,8 +26,9 @@ def line_to_trace_record(line, identifier):
 
 
 class RandomQueryGenerator:
-    def __init__(self):
+    def __init__(self, seed):
         self.value_dict = dict()
+        random.seed(seed)
         for filename in os.listdir(FILTER_VAL_DIR):
             self.value_dict[self.__strip_filename(filename)] = []
             with open(os.path.join(FILTER_VAL_DIR, filename), 'r') as value_file:
@@ -41,9 +42,8 @@ class RandomQueryGenerator:
         parts = filename.split('_')
         return '_'.join(parts[1:])
 
-    def generate_random_queries(self, size=1, seed=1):
+    def generate_random_queries(self, size=1):
         queries = []
-        random.seed(seed)
 
         for i in range(0, size):
             queries.append(self._generate_random_query())
@@ -56,6 +56,6 @@ class RandomQueryGenerator:
         for i in range(0, number_of_fields):
             field = random.choice(list(self.value_dict.keys()))
             filter_value = random.choice(self.value_dict[field])
-            query.update({field, filter_value})
+            query[field] = filter_value
 
         return query

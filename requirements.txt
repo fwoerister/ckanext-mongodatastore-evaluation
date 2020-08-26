@@ -9,3 +9,4 @@ psycopg2-binary
 gitpython
 python-gitlab
 pymongo
+numpy

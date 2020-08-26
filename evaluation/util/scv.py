@@ -37,23 +37,28 @@ class GitlabUtil():
 
 
 class GitUtil:
-    def __init__(self, git_url, tag=None):
-        self.REPOPATH = config['git']['repopath']
-        self.RESULTS_DIR = os.environ.get('RESULTS_DIR')
+    def __init__(self, git_url, results_dir=None, tag=None):
+        self._repopath = config['git']['repopath']
+        self._results_dir = results_dir
         try:
-            shutil.rmtree(self.REPOPATH)
+            shutil.rmtree(self._repopath)
         except OSError as e:
             print(e)
-        os.mkdir(self.REPOPATH)
+        os.mkdir(self._repopath)
 
-        self.REPO = Repo.clone_from(git_url, self.REPOPATH)
-        self.GIT = Git(self.REPOPATH)
+        self.REPO = Repo.clone_from(git_url, self._repopath)
+        self.GIT = Git(self._repopath)
 
         if tag:
             self.GIT.checkout(tag)
 
+    @staticmethod
+    def purge_repository():
+        shutil.rmtree(config['git']['repopath'])
+        os.mkdir(config['git']['repopath'])
+
     def copy_file_into_repo(self, file):
-        target = os.path.join(self.REPOPATH, os.path.basename(file))
+        target = os.path.join(self._repopath, os.path.basename(file))
         copyfile(file, target)
         self.REPO.index.add([os.path.basename(target)])
 
@@ -65,22 +70,18 @@ class GitUtil:
         tag = self.REPO.create_tag(tag_name)
         self.REPO.remotes.origin.push(tag)
 
-    def purge_repository(self):
-        shutil.rmtree(self.REPOPATH)
-        os.mkdir(self.REPOPATH)
-
     def create_new_file(self, filename, content):
-        target = os.path.join(self.REPOPATH, filename)
+        target = os.path.join(self._repopath, filename)
         with open(target, 'w') as file:
             file.writelines(content)
         self.REPO.index.add([os.path.basename(target)])
 
     def copy_repofile_to_results(self, filename, execution_tag):
-        shutil.copyfile(os.path.join(self.REPOPATH, filename),
-                        os.path.join(self.RESULTS_DIR, 'pdf', f"{execution_tag}_{filename}"))
+        shutil.copyfile(os.path.join(self._repopath, filename),
+                        os.path.join(self._results_dir, 'pdf', f"{execution_tag}_{filename}"))
 
     def replace_repofile(self, src, target):
-        target=os.path.join(self.REPOPATH, target)
+        target=os.path.join(self._repopath, target)
         os.remove(target)
         shutil.copyfile(src, target)
 
