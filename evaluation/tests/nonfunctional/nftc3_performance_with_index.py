@@ -12,8 +12,8 @@ from evaluation.tests import GenericNonFunctionalTest
 
 class PerformanceIndexUsage(GenericNonFunctionalTest):
 
-    def __init__(self, results_dir, name, dataset, chunksize):
-        super(PerformanceIndexUsage, self).__init__(results_dir, name, dataset, chunksize)
+    def __init__(self, results_dir, name, dataset, chunksize, test_interval):
+        super(PerformanceIndexUsage, self).__init__(results_dir, name, dataset, chunksize, test_interval)
         self._queries = None
 
     def _prepare_preconditions(self):

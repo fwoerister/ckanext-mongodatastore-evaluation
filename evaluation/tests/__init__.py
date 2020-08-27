@@ -95,13 +95,14 @@ class GenericNonFunctionalTest(GenericTest, ABC):
                     line_count += 1
 
                     if line_count % self._chunksize == 0:
+                        self.logger.info(f'📈upload chunk')
                         response_time = timeit.timeit(
                             lambda: ckan.client.action.datastore_upsert(resource_id=self._resource_id, records=records,
                                                                         force=True, method='insert'), number=1)
                         insert_time_file.writelines(f'{response_time}\n')
                         insert_time_file.flush()
 
-                        if line_count & self._test_interval == 0:
+                        if line_count % self._test_interval == 0:
                             self.logger.info(f'📈 perform evaluation - ({line_count} records uploaded) 📈 ')
                             self._do_evaluation()
                             self.logger.info('evaluation done ✅ ')

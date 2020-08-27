@@ -1,15 +1,13 @@
-import logging
-
 # DESCRIPTION
-#
+from evaluation.tests import GenericNonFunctionalTest
 
-logger = logging.getLogger(__name__)
-logging.basicConfig(level=logging.INFO)
 
-logging.info("Start execution of 'nftc4'")
+class PerformanceShardingTest(GenericNonFunctionalTest):
+    def __init__(self, results_dir, name, dataset, chunksize, test_interval):
+        super(PerformanceShardingTest, self).__init__(results_dir, name, dataset, chunksize, test_interval)
 
-# PRE-REQUISIT
+    def _prepare_preconditions(self):
+        pass
 
-# STEPS
-
-# EXPECTED RESULTS
+    def _do_evaluation(self):
+        pass

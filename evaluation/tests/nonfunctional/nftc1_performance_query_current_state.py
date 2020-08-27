@@ -35,8 +35,8 @@ def filter_query(resource_id, statement):
 
 class PerformanceQueryCurrentStateTest(GenericNonFunctionalTest):
 
-    def __init__(self, results_dir, name, dataset, chunk_size):
-        super(PerformanceQueryCurrentStateTest, self).__init__(results_dir, name, dataset, chunk_size)
+    def __init__(self, results_dir, name, dataset, chunk_size, test_interval):
+        super(PerformanceQueryCurrentStateTest, self).__init__(results_dir, name, dataset, chunk_size, test_interval)
         self._resource_id = None
 
     def _prepare_preconditions(self):
@@ -56,7 +56,7 @@ class PerformanceQueryCurrentStateTest(GenericNonFunctionalTest):
         self.fulltext_queries = ['GET', 'gif', 'html']
 
     def _do_evaluation(self):
-        with open(os.path.join(self.results_dir, 'nftc1_filter_query_result.csv'), 'a') as result_file:
+        with open(os.path.join(self.results_dir, 'csv', 'nftc1_filter_query_result.csv'), 'a') as result_file:
             filter_queries = list(
                 map(lambda query: functools.partial(filter_query, self._resource_id, query), self.filter_queries))
             result = do_loadtest(filter_queries)
@@ -64,7 +64,7 @@ class PerformanceQueryCurrentStateTest(GenericNonFunctionalTest):
             result_file.writelines(f"{result}\n")
             result_file.flush()
 
-        with open(os.path.join(self.results_dir, 'nftc1_filter_query_result.csv'), 'a') as result_file:
+        with open(os.path.join(self.results_dir, 'csv', 'nftc1_fulltext_query_result.csv'), 'a') as result_file:
             fulltext_queries = list(
                 map(lambda query: functools.partial(fulltext_query, self._resource_id, query),
                     self.fulltext_queries))

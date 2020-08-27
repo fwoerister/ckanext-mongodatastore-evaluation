@@ -16,8 +16,8 @@ from evaluation.util.trace import line_to_trace_record
 
 class PerformanceStoredQueryTest(GenericNonFunctionalTest):
 
-    def __init__(self, results_dir, name, dataset, chunksize):
-        super().__init__(results_dir, name, dataset, chunksize)
+    def __init__(self, results_dir, name, dataset, chunksize, test_interval):
+        super().__init__(results_dir, name, dataset, chunksize, test_interval)
         self._pids = []
         self._resource_id = None
 
