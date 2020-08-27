@@ -15,6 +15,7 @@ SUBSET_QUERY = {'Year': {'$gte': 1946}, 'Year': {'$lte': 2009},
 
 
 class ExperimentRestFunctionalTest(GenericFunctionalTest):
+
     def __init__(self, results_dir, name):
         super(ExperimentRestFunctionalTest, self).__init__(results_dir, name)
         self.gitlab_util = GitlabUtil()

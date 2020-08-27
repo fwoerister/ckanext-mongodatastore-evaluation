@@ -11,6 +11,7 @@ RANDOM_SEED = 1234
 
 
 class GenericTest(ABC):
+
     def __init__(self, results_dir, name):
         self.results_dir = results_dir
         self.name = name
@@ -23,6 +24,7 @@ class GenericTest(ABC):
 
 
 class GenericFunctionalTest(GenericTest, ABC):
+
     def __init__(self, results_dir, name):
         super(GenericFunctionalTest, self).__init__(results_dir, name)
         logging.basicConfig(level=logging.INFO)
@@ -59,6 +61,7 @@ class GenericFunctionalTest(GenericTest, ABC):
 
 
 class GenericNonFunctionalTest(GenericTest, ABC):
+    
     def __init__(self, results_dir, name, dataset, chunksize, test_interval):
         super(GenericNonFunctionalTest, self).__init__(results_dir, name)
         self._dataset = dataset
@@ -95,15 +98,16 @@ class GenericNonFunctionalTest(GenericTest, ABC):
                     line_count += 1
 
                     if line_count % self._chunksize == 0:
-                        self.logger.info(f'📈upload chunk')
+
                         response_time = timeit.timeit(
                             lambda: ckan.client.action.datastore_upsert(resource_id=self._resource_id, records=records,
                                                                         force=True, method='insert'), number=1)
+                        self.logger.info(f'{str(line_count).rjust(8," ")} records uploaded')
                         insert_time_file.writelines(f'{response_time}\n')
                         insert_time_file.flush()
 
                         if line_count % self._test_interval == 0:
-                            self.logger.info(f'📈 perform evaluation - ({line_count} records uploaded) 📈 ')
+                            self.logger.info('📈 perform evaluation 📈 ')
                             self._do_evaluation()
                             self.logger.info('evaluation done ✅ ')
 

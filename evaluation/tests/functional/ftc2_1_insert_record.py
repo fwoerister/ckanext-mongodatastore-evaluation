@@ -14,6 +14,7 @@ NEW_RECORD = {'id': 1276, 'Country': 'Australia', 'Year': 2010, 'Debt': 101136.2
 
 
 class InsertRecordFunctionalTest(GenericFunctionalTest):
+
     def __init__(self, results_dir, name):
         super(InsertRecordFunctionalTest, self).__init__(results_dir, name)
         self._resource_id = None

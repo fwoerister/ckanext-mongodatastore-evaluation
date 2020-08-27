@@ -14,6 +14,7 @@ NEW_RECORD = {'id': 1, 'Country': 'Australia', 'Year': 2000, 'Debt': None, 'RGDP
 
 
 class ModifyRecordFunctionalTest(GenericFunctionalTest):
+
     def __init__(self, results_dir, name):
         super(ModifyRecordFunctionalTest, self).__init__(results_dir, name)
         self._resource_id = None

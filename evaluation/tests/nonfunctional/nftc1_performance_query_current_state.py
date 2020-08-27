@@ -42,9 +42,14 @@ class PerformanceQueryCurrentStateTest(GenericNonFunctionalTest):
     def _prepare_preconditions(self):
         ckan.verify_if_evaluser_exists()
         ckan.verify_if_organization_exists('tu-wien')
-        package_id = ckan.verify_package_does_exist('rr-experiment')
+        package = ckan.client.action.package_create(name='ucbtrace', title='UC Berkeley Home IP Web Traces',
+                                               private=False,
+                                               owner_org='dc13c7c9-c3c9-42ac-8200-8fe007c049a1',
+                                               author='Steve Gribble',
+                                               maintainer='', license='other-open',
+                                               extras=[{'key': 'year', 'value': '2017'}])
 
-        self._resource_id = ckan.client.action.resource_create(package_id=package_id,
+        self._resource_id = ckan.client.action.resource_create(package_id=package['id'],
                                                                name='UC Berkeley Home IP Web Trace')['id']
 
         with open('data/datasets/trace_fields.json', 'r') as trace_fields:
@@ -62,7 +67,6 @@ class PerformanceQueryCurrentStateTest(GenericNonFunctionalTest):
             result = do_loadtest(filter_queries)
 
             result_file.writelines(f"{result}\n")
-            result_file.flush()
 
         with open(os.path.join(self.results_dir, 'csv', 'nftc1_fulltext_query_result.csv'), 'a') as result_file:
             fulltext_queries = list(
@@ -71,4 +75,3 @@ class PerformanceQueryCurrentStateTest(GenericNonFunctionalTest):
             result = do_loadtest(fulltext_queries)
 
             result_file.writelines(f"{result}\n")
-            result_file.flush()
