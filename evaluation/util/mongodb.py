@@ -36,3 +36,13 @@ def verify_document_was_marked_as_deleted(resource_id, id):
     for record in records:
         assert '_valid_to' in record.keys(), \
             'There is still a document with id {} and no _valid_to date in the collection'.format(id)
+
+
+def purge_indexes(db_name):
+    for col_name in db.list_collection_names():
+        col = db.get_collection(col_name)
+        for idx in col.list_indexes():
+            if idx['name'] != '_id_':
+                col.drop_index(idx['name'])
+
+

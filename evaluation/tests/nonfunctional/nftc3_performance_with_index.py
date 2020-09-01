@@ -7,10 +7,14 @@ import timeit
 import numpy
 
 import evaluation.util.ckan as ckan
+import evaluation.util.mongodb as mongodb
 from evaluation.tests import GenericNonFunctionalTest
 
 
 class PerformanceIndexUsage(GenericNonFunctionalTest):
+
+    def _get_target_resources(self):
+        return [self._resource_id, self._resource_id_idx]
 
     def __init__(self, results_dir, name, dataset, chunksize, test_interval):
         super(PerformanceIndexUsage, self).__init__(results_dir, name, dataset, chunksize, test_interval)
@@ -19,6 +23,10 @@ class PerformanceIndexUsage(GenericNonFunctionalTest):
     def _prepare_preconditions(self):
         ckan.verify_if_evaluser_exists()
         ckan.verify_if_organization_exists('tu-wien')
+
+        ckan.ensure_package_does_not_exist('ucbtrace')
+        mongodb.purge_indexes('CKAN_Datastore')
+
         package = ckan.client.action.package_create(name='ucbtrace', title='UC Berkeley Home IP Web Traces',
                                                     private=False,
                                                     owner_org='dc13c7c9-c3c9-42ac-8200-8fe007c049a1',
@@ -57,8 +65,8 @@ class PerformanceIndexUsage(GenericNonFunctionalTest):
                                                             statement=query,
                                                             limit=100), repeat=10, number=1)
 
-        with open(os.path.join(self.results_dir, 'csv', 'nftc3_response_times.csv'), 'a') as result_file:
+        with open(os.path.join(self.results_dir, 'csv', f'{self.tag}_nftc3_response_times.csv'), 'a') as result_file:
             result_file.writelines(f'{numpy.average(response_time)}\n')
 
-        with open(os.path.join(self.results_dir, 'csv', 'nftc3_response_times_idx.csv'), 'a') as result_file:
+        with open(os.path.join(self.results_dir, 'csv', f'{self.tag}_nftc3_response_times_idx.csv'), 'a') as result_file:
             result_file.writelines(f'{numpy.average(response_time_idx)}\n')

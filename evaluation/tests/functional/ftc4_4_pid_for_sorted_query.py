@@ -31,6 +31,10 @@ class PidForSortedQueryFunctionalTest(GenericFunctionalTest):
         self._pid = ckan.client.action.issue_pid(resource_id=self._resource_id, filters={'Country': 'France'},
                                                  projection={'id': 1},
                                                  sort="Dept asc")
+
+        sleep(5)
+        self.logger.info("wait 5 seconds for background job to finish...")
+
         self._stored_query_results.append(ckan.client.action.querystore_resolve(pid=self._pid))
 
         new_record = {'id': 1278, 'Country': 'Australia', 'Year': 2010, 'Debt': 101136.25205, 'RGDP': None, 'GDP': None,
@@ -54,9 +58,6 @@ class PidForSortedQueryFunctionalTest(GenericFunctionalTest):
 
         ckan.client.action.datastore_delete(resource_id=self._resource_id, filters={'Country': 'Japan'}, force=True)
         self._stored_query_results.append(ckan.client.action.querystore_resolve(pid=self._pid))
-
-        self.logger.info("wait 5 seconds for background job to finish...")
-        sleep(5)
 
     def _check_postcondition(self):
         hash.verify_all_elements_have_same_hash(self._stored_query_results, hash.calculate_hash)

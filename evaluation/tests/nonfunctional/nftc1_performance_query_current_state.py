@@ -11,6 +11,7 @@ import timeit
 import numpy
 
 import evaluation.util.ckan as ckan
+import evaluation.util.mongodb as mongodb
 from evaluation.tests import GenericNonFunctionalTest
 
 DATASET = 'data/datasets/preprocessed_trace'
@@ -42,6 +43,10 @@ class PerformanceQueryCurrentStateTest(GenericNonFunctionalTest):
     def _prepare_preconditions(self):
         ckan.verify_if_evaluser_exists()
         ckan.verify_if_organization_exists('tu-wien')
+
+        ckan.ensure_package_does_not_exist('ucbtrace')
+        mongodb.purge_indexes('CKAN_Datastore')
+
         package = ckan.client.action.package_create(name='ucbtrace', title='UC Berkeley Home IP Web Traces',
                                                     private=False,
                                                     owner_org='dc13c7c9-c3c9-42ac-8200-8fe007c049a1',
@@ -61,14 +66,14 @@ class PerformanceQueryCurrentStateTest(GenericNonFunctionalTest):
         self.fulltext_queries = ['GET', 'gif', 'html']
 
     def _do_evaluation(self):
-        with open(os.path.join(self.results_dir, 'csv', 'nftc1_filter_query_result.csv'), 'a') as result_file:
+        with open(os.path.join(self.results_dir, 'csv', f'{self.tag}_nftc1_filter_query_result.csv'), 'a') as result_file:
             filter_queries = list(
                 map(lambda query: functools.partial(filter_query, self._resource_id, query), self.filter_queries))
             result = do_loadtest(filter_queries)
 
             result_file.writelines(f"{result}\n")
 
-        with open(os.path.join(self.results_dir, 'csv', 'nftc1_fulltext_query_result.csv'), 'a') as result_file:
+        with open(os.path.join(self.results_dir, 'csv', f'{self.tag}_nftc1_fulltext_query_result.csv'), 'a') as result_file:
             fulltext_queries = list(
                 map(lambda query: functools.partial(fulltext_query, self._resource_id, query),
                     self.fulltext_queries))

@@ -13,14 +13,15 @@ RANDOM_SEED = 1234
 class GenericTest(ABC):
 
     def __init__(self, results_dir, name):
+        self.tag = ''
         self.results_dir = results_dir
         self.name = name
         self.logger = logging.getLogger(__name__)
         logging.basicConfig(level=logging.INFO)
 
     @abc.abstractmethod
-    def run(self):
-        pass
+    def run(self, tag):
+        self.tag = tag
 
 
 class GenericFunctionalTest(GenericTest, ABC):
@@ -42,7 +43,8 @@ class GenericFunctionalTest(GenericTest, ABC):
     def _check_postcondition(self):
         pass
 
-    def run(self):
+    def run(self, tag):
+        super(GenericFunctionalTest, self).run(tag)
         self.logger.info(f"⏳ Start execution of '{self.name}' ⏳ ")
 
         self.logger.info("check preconditions...")
@@ -61,7 +63,6 @@ class GenericFunctionalTest(GenericTest, ABC):
 
 
 class GenericNonFunctionalTest(GenericTest, ABC):
-    
     def __init__(self, results_dir, name, dataset, chunksize, test_interval):
         super(GenericNonFunctionalTest, self).__init__(results_dir, name)
         self._dataset = dataset
@@ -78,10 +79,14 @@ class GenericNonFunctionalTest(GenericTest, ABC):
     def _do_evaluation(self):
         pass
 
+    def _get_target_resources(self):
+        return [self._resource_id]
+
     def _after_upload(self):
         pass
 
-    def run(self):
+    def run(self, tag):
+        super(GenericNonFunctionalTest, self).run(tag)
         self.logger.info(f"⏳ Start execution of '{self.name}' ⏳ ")
 
         self.logger.info("check preconditions...")
@@ -89,41 +94,42 @@ class GenericNonFunctionalTest(GenericTest, ABC):
         self.logger.info("preconditions are fulfilled")
 
         with open(self._dataset) as trace_file:
-            with open(os.path.join(self.results_dir, 'csv', 'insert_time.csv'), 'w') as insert_time_file:
-                line = trace_file.readline()
-                line_count = 0
-                records = []
-                while line:
-                    records.append(line_to_trace_record(line, line_count))
-                    line_count += 1
+            line = trace_file.readline()
+            line_count = 0
+            records = []
+            while line:
+                records.append(line_to_trace_record(line, line_count))
+                line_count += 1
 
-                    if line_count % self._chunksize == 0:
-
+                if line_count % self._chunksize == 0:
+                    for resource_id in self._get_target_resources():
                         response_time = timeit.timeit(
-                            lambda: ckan.client.action.datastore_upsert(resource_id=self._resource_id, records=records,
+                            lambda: ckan.client.action.datastore_upsert(resource_id=resource_id, records=records,
                                                                         force=True, method='insert'), number=1)
-                        self.logger.info(f'{str(line_count).rjust(8," ")} records uploaded')
-                        insert_time_file.writelines(f'{response_time}\n')
-                        insert_time_file.flush()
+                        with open(os.path.join(self.results_dir, 'csv', f'{self.tag}_insert_time_{resource_id}.csv'), 'a') as file:
+                            file.writelines(f'{response_time}\n')
 
-                        if line_count % self._test_interval == 0:
-                            self.logger.info('📈 perform evaluation 📈 ')
-                            self._do_evaluation()
-                            self.logger.info('evaluation done ✅ ')
+                    self.logger.info(f'{str(line_count).rjust(8, " ")} records uploaded')
 
-                        records = []
+                    if line_count % self._test_interval == 0:
+                        self.logger.info('📈 perform evaluation 📈 ')
+                        self._do_evaluation()
+                        self.logger.info('evaluation done ✅ ')
 
-                    line = trace_file.readline()
+                    records = []
 
-                if len(records) != 0:
-                    response_time = timeit.timeit(
-                        lambda: ckan.client.action.datastore_upsert(resource_id=self._resource_id, records=records,
-                                                                    force=True, method='insert'), number=1)
-                    insert_time_file.writelines('{0}\n'.format(response_time))
+                line = trace_file.readline()
 
-                    self.logger.info(f'📈 perform evaluation - ({line_count} records uploaded) 📈 ')
-                    self._do_evaluation()
-                    self.logger.info('evaluation done ✅ ')
+            if len(records) != 0:
+                response_time = timeit.timeit(
+                    lambda: ckan.client.action.datastore_upsert(resource_id=self._resource_id, records=records,
+                                                                force=True, method='insert'), number=1)
+                with open(os.path.join(self.results_dir, 'csv', f'{self.tag}_insert_time_{resource_id}.csv'), 'a') as file:
+                    file.writelines('{0}\n'.format(response_time))
+
+                self.logger.info(f'📈 perform evaluation - ({line_count} records uploaded) 📈 ')
+                self._do_evaluation()
+                self.logger.info('evaluation done ✅ ')
 
         self._after_upload()
 
