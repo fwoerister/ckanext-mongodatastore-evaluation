@@ -53,7 +53,7 @@ class PerformanceIndexUsage(GenericNonFunctionalTest):
 
         self._queries = self._random_query_generator.generate_random_queries(10, ['client_port'])
 
-    def _do_evaluation(self):
+    def _after_upload(self):
         response_time = []
         response_time_idx = []
         for query in self._queries:
