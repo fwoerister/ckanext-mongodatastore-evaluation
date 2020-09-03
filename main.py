@@ -59,8 +59,9 @@ def run_test_subset(passed_argument_tags, functional_tests):
         return
 
     if len(passed_argument_tags) > 0:
-        for tag in args.functional:
+        for tag in passed_argument_tags:
             functional_tests[tag].run(args.tag)
+        return
 
     for tag in functional_tests:
         functional_tests[tag].run(args.tag)

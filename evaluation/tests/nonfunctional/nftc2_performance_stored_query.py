@@ -58,7 +58,7 @@ class PerformanceStoredQueryTest(GenericNonFunctionalTest):
 
                 line_count += 1
 
-        filter_queries = self._random_query_generator.generate_random_queries(size=10)
+        filter_queries = self._random_query_generator.generate_random_queries(size=20)
         fulltext_queries = ['GET', 'gif', 'html']
 
         for query in filter_queries:
@@ -69,12 +69,15 @@ class PerformanceStoredQueryTest(GenericNonFunctionalTest):
             self._pids.append(ckan.client.action.issue_pid(resource_id=self._resource_id,
                                                            q=query))
 
+        with open(os.path.join(self.results_dir, 'csv', f'{self.tag}_nftc2_response_times.csv'), 'a') as result_file:
+            result_file.writelines('stored_query\n')
+
     def _do_evaluation(self):
         results = []
 
         for pid in self._pids:
             results.append(timeit.repeat(lambda: ckan.client.action.querystore_resolve(pid=pid, limit=100),
-                                         repeat=5,
+                                         repeat=1,
                                          number=1))
 
         with open(os.path.join(self.results_dir, 'csv', f'{self.tag}_nftc2_response_times.csv'), 'a') as result_file:

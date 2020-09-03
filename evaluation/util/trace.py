@@ -32,10 +32,10 @@ class RandomQueryGenerator:
         for filename in os.listdir(FILTER_VAL_DIR):
             self.value_dict[self.__strip_filename(filename)] = []
             with open(os.path.join(FILTER_VAL_DIR, filename), 'r') as value_file:
-                val = value_file.readline().rstrip()
-                if filename.startswith('int'):
-                    val = int(val)
-                self.value_dict[self.__strip_filename(filename)].append(val)
+                while val := value_file.readline().rstrip():
+                    if filename.startswith('int'):
+                        val = int(val)
+                    self.value_dict[self.__strip_filename(filename)].append(val)
 
     @staticmethod
     def __strip_filename(filename):
@@ -46,7 +46,7 @@ class RandomQueryGenerator:
         queries = []
 
         for i in range(0, size):
-            queries.append(self._generate_random_query())
+            queries.append(self._generate_random_query(fields=fields))
 
         return queries
 

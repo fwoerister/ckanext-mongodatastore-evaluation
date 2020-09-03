@@ -3,6 +3,7 @@
 import json
 import os
 import timeit
+from time import sleep
 
 import numpy
 
@@ -12,9 +13,6 @@ from evaluation.tests import GenericNonFunctionalTest
 
 
 class PerformanceIndexUsage(GenericNonFunctionalTest):
-
-    def _get_target_resources(self):
-        return [self._resource_id, self._resource_id_idx]
 
     def __init__(self, results_dir, name, dataset, chunksize, test_interval):
         super(PerformanceIndexUsage, self).__init__(results_dir, name, dataset, chunksize, test_interval)
@@ -40,33 +38,30 @@ class PerformanceIndexUsage(GenericNonFunctionalTest):
         with open('data/datasets/trace_fields.json', 'r') as trace_fields:
             ckan.client.action.datastore_create(resource_id=self._resource_id, force='True',
                                                 fields=json.load(trace_fields),
-                                                primary_key='id')
-
-        self._resource_id_idx = ckan.client.action.resource_create(package_id=package['id'],
-                                                                   name='UC Berkeley Home IP Web Trace - Idx')['id']
-
-        with open('data/datasets/trace_fields.json', 'r') as trace_fields:
-            ckan.client.action.datastore_create(resource_id=self._resource_id_idx, force='True',
-                                                fields=json.load(trace_fields),
                                                 indexes="client_port",
                                                 primary_key='id')
 
-        self._queries = self._random_query_generator.generate_random_queries(10, ['client_port'])
+        self._queries = self._random_query_generator.generate_random_queries(20, ['client_port'])
+
+    def _do_evaluation(self):
+        super(PerformanceIndexUsage, self)._do_evaluation()
 
     def _after_upload(self):
         response_time = []
         response_time_idx = []
         for query in self._queries:
-            response_time = timeit.repeat(lambda: ckan.client.action.datastore_search(resource_id=self._resource_id,
-                                                                                      statement=query,
-                                                                                      limit=100), repeat=10, number=1)
-            response_time_idx = timeit.repeat(
-                lambda: ckan.client.action.datastore_search(resource_id=self._resource_id_idx,
-                                                            statement=query,
-                                                            limit=100), repeat=10, number=1)
+            response_time_idx.append(timeit.repeat(lambda: ckan.datastore_search(self._resource_id, filter=query),
+                                                   repeat=1,
+                                                   number=1))
+
+        mongodb.purge_index(self._resource_id, 'client_port_index')
+        sleep(5)
+
+        for query in self._queries:
+            response_time.append(timeit.repeat(lambda: ckan.datastore_search(self._resource_id, filter=query),
+                                               repeat=1,
+                                               number=1))
 
         with open(os.path.join(self.results_dir, 'csv', f'{self.tag}_nftc3_response_times.csv'), 'a') as result_file:
-            result_file.writelines(f'{numpy.average(response_time)}\n')
-
-        with open(os.path.join(self.results_dir, 'csv', f'{self.tag}_nftc3_response_times_idx.csv'), 'a') as result_file:
-            result_file.writelines(f'{numpy.average(response_time_idx)}\n')
+            result_file.writelines('index;no index\n')
+            result_file.writelines(f'{numpy.average(response_time_idx)};{numpy.average(response_time)}\n')
