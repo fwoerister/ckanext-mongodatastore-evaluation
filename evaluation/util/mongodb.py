@@ -46,3 +46,5 @@ def purge_indexes(db_name):
                 col.drop_index(idx['name'])
 
 
+def purge_index(resource_id, index_name):
+    db.get_collection(resource_id).drop_index(index_name)
