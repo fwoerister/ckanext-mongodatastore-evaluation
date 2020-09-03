@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 
-def generate_line_chart(x, data, x_label, y_label, title, target):
+def generate_line_chart(x, data, x_label, y_label, title, ymax, target):
     for y in data:
         plt.plot(x, y)
 
@@ -10,6 +10,8 @@ def generate_line_chart(x, data, x_label, y_label, title, target):
     plt.ylabel(y_label)
 
     plt.title(title)
+
+    plt.ylim(0, ymax)
 
     plt.savefig(target)
     plt.show()
