@@ -106,7 +106,8 @@ class GenericNonFunctionalTest(GenericTest, ABC):
                         response_time = timeit.timeit(
                             lambda: ckan.client.action.datastore_upsert(resource_id=resource_id, records=records,
                                                                         force=True, method='insert'), number=1)
-                        with open(os.path.join(self.results_dir, 'csv', f'{self.tag}_insert_time_{resource_id}.csv'), 'a') as file:
+                        with open(os.path.join(self.results_dir, 'csv', f'{self.tag}_insert_time_{resource_id}.csv'),
+                                  'a') as file:
                             file.writelines(f'{response_time}\n')
 
                     self.logger.info(f'{str(line_count).rjust(8, " ")} records uploaded')
@@ -121,11 +122,13 @@ class GenericNonFunctionalTest(GenericTest, ABC):
                 line = trace_file.readline()
 
             if len(records) != 0:
-                response_time = timeit.timeit(
-                    lambda: ckan.client.action.datastore_upsert(resource_id=self._resource_id, records=records,
-                                                                force=True, method='insert'), number=1)
-                with open(os.path.join(self.results_dir, 'csv', f'{self.tag}_insert_time_{resource_id}.csv'), 'a') as file:
-                    file.writelines('{0}\n'.format(response_time))
+                for resource_id in self._get_target_resources():
+                    response_time = timeit.timeit(
+                        lambda: ckan.client.action.datastore_upsert(resource_id=resource_id, records=records,
+                                                                    force=True, method='insert'), number=1)
+                    with open(os.path.join(self.results_dir, 'csv', f'{self.tag}_insert_time_{resource_id}.csv'),
+                              'a') as file:
+                        file.writelines(f'{response_time}\n')
 
                 self.logger.info(f'📈 perform evaluation - ({line_count} records uploaded) 📈 ')
                 self._do_evaluation()

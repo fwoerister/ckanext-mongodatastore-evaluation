@@ -11,15 +11,14 @@ import timeit
 import numpy
 
 import evaluation.util.ckan as ckan
-import evaluation.util.mongodb as mongodb
 from evaluation.tests import GenericNonFunctionalTest
+from evaluation.util import mongodb
 
-DATASET = 'data/datasets/preprocessed_trace'
 RESULTS_DIR = os.environ.get('RESULTS_DIR')
 CHUNK_SIZE = 10000
 
 
-def do_loadtest(queries, iterations=5):
+def do_loadtest(queries, iterations=1):
     response_times = []
     for query in queries:
         response_times += timeit.repeat(query, repeat=iterations, number=1)
@@ -27,11 +26,11 @@ def do_loadtest(queries, iterations=5):
 
 
 def fulltext_query(resource_id, query):
-    res = ckan.client.action.datastore_search(resource_id=resource_id, q=query, limit=100)
+    ckan.datastore_search(resource_id=resource_id, q=query)
 
 
 def filter_query(resource_id, statement):
-    res = ckan.client.action.datastore_search(resource_id=resource_id, filters=statement, limit=100)
+    ckan.datastore_search(resource_id=resource_id, filter=statement)
 
 
 class PerformanceQueryCurrentStateTest(GenericNonFunctionalTest):
@@ -62,21 +61,21 @@ class PerformanceQueryCurrentStateTest(GenericNonFunctionalTest):
                                                 fields=json.load(trace_fields),
                                                 primary_key='id')
 
-        self.filter_queries = self._random_query_generator.generate_random_queries(size=10)
+        self.filter_queries = self._random_query_generator.generate_random_queries(size=20)
         self.fulltext_queries = ['GET', 'gif', 'html']
 
+        with open(os.path.join(self.results_dir, 'csv', f'{self.tag}_nftc1_result.csv'), 'a') as result_file:
+            result_file.writelines('filter;fulltext\n')
+
     def _do_evaluation(self):
-        with open(os.path.join(self.results_dir, 'csv', f'{self.tag}_nftc1_filter_query_result.csv'), 'a') as result_file:
+        with open(os.path.join(self.results_dir, 'csv', f'{self.tag}_nftc1_result.csv'), 'a') as result_file:
             filter_queries = list(
                 map(lambda query: functools.partial(filter_query, self._resource_id, query), self.filter_queries))
-            result = do_loadtest(filter_queries)
+            filter_result = do_loadtest(filter_queries)
 
-            result_file.writelines(f"{result}\n")
-
-        with open(os.path.join(self.results_dir, 'csv', f'{self.tag}_nftc1_fulltext_query_result.csv'), 'a') as result_file:
             fulltext_queries = list(
                 map(lambda query: functools.partial(fulltext_query, self._resource_id, query),
                     self.fulltext_queries))
-            result = do_loadtest(fulltext_queries)
+            fulltext_result = do_loadtest(fulltext_queries)
 
-            result_file.writelines(f"{result}\n")
+            result_file.writelines(f"{filter_result};{fulltext_result}\n")
