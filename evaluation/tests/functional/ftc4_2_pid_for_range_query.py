@@ -30,7 +30,7 @@ class PidForRangeQueryFunctionalTest(GenericFunctionalTest):
                                                                    'datastore_active': True})
 
     def _execute_steps(self):
-        self._pid = ckan.client.action.issue_pid(resource_id=self._resource_id, statement={'Country': 'Italy'},
+        self._pid = ckan.client.action.issue_pid(resource_id=self._resource_id, statement={'Debt': '>200000000'},
                                                  sort='Infl asc')
 
         sleep(5)
