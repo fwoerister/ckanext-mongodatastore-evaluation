@@ -74,6 +74,17 @@ def verify_resultset_record_count(result, expected_count):
     assert result['total'] == expected_count, f"expected {expected_count} records but retrieved {result['total']}"
 
 
+def nv_datastore_search(resource_id, filter=None, q=None):
+    url = f'{HOST}/api/3/action/nv_query?limit=500&resource_id={resource_id}'
+
+    if filter:
+        url += f'&filters={json.dumps(filter)}'
+    if q:
+        url += f'&q={q}'
+
+    return requests.get(url).json()
+
+
 def datastore_search(resource_id, filter=None, q=None):
     url = f'{HOST}/api/3/action/datastore_search?limit=500&resource_id={resource_id}'
 

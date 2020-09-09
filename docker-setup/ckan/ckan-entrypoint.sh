@@ -48,12 +48,13 @@ ckan-paster --plugin=ckan config-tool "$CONFIG" -e \
   "ckan.datastore.read_url = ${CKAN_DATASTORE_MG_READ_URL}" \
   "ckan.site_url = ${CKAN_SITE_URL}" \
   "ckan.site_id = ${CKAN_SITE_ID}" \
-  "ckan.plugins = stats text_view image_view recline_view datapusher datastore mongodatastore"
+  "ckan.plugins = stats text_view image_view datapusher datastore mongodatastore reclinecitationview" \
+  "ckan.views.default_views = image_view text_view reclinecitation_view"
 
-sed "/\[app:main\]/a ckan.querystore.url=${CKAN_QUERYSTORE_URL}" "$CONFIG" -i.bkp
-sed "/\[app:main\]/a ckan.querystore.url=${CKAN_QUERYSTORE_URL}" "$CONFIG" -i.bkp
-sed "/\[app:main\]/a ckan.datastore.database=${CKAN_DATASTORE_DATABASE}" "$CONFIG" -i.bkp
-sed "/\[app:main\]/a ckan.jobs.timeout=600" "$CONFIG" -i.bkp
+sed "/\[app:main\]/a ckanext.mongodatastore.mongodb_url=${CKAN_DATASTORE_MG_WRITE_URL}" "$CONFIG" -i.bkp
+sed "/\[app:main\]/a ckanext.mongodatastore.querystore_url=${CKAN_QUERYSTORE_URL}" "$CONFIG" -i.bkp
+sed "/\[app:main\]/a ckanext.mongodatastore.sharding_enabled=${CKAN_DATASTORE_SHARDING}" "$CONFIG" -i.bkp
+sed "/\[app:main\]/a ckanext.mongodatastore.database_name=${CKAN_DATASTORE_DATABASE}" "$CONFIG" -i.bkp
 
 cd /usr/lib/ckan/venv/src/ckan
 # start worker

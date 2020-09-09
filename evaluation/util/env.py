@@ -13,7 +13,6 @@ EXPECTED_CONTAINERS = [u'mongodb', u'handle_server', u'mdb-shard03', u'redis', u
 
 
 def verify_containers_are_running(expected_containers=EXPECTED_CONTAINERS):
-    pass
     running_containers = [cont.name for cont in c.containers.list()]
     for container in expected_containers:
         assert container in running_containers, "Container '{}' is not running!".format(container)
@@ -22,3 +21,8 @@ def verify_containers_are_running(expected_containers=EXPECTED_CONTAINERS):
 def is_available(url):
     result = requests.get(url)
     assert result.status_code == 200, "The response status of {} was {}".format(url, result.status_code)
+
+
+def container_runs(container_name):
+    running_containers = [cont.name for cont in c.containers.list()]
+    return container_name in running_containers

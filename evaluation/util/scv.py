@@ -16,8 +16,11 @@ GIT = Git(config['git']['repopath'])
 
 class GitlabUtil():
     def __init__(self):
-        AUTH_URL = '{}/oauth/token'.format(config['gitlab']['base_url'])
-        response = requests.post(AUTH_URL, data={
+        self.AUTH_URL = '{}/oauth/token'.format(config['gitlab']['base_url'])
+        self.gl = None
+
+    def __init_client(self):
+        response = requests.post(self.AUTH_URL, data={
             'grant_type': 'password',
             'username': config['gitlab']['username'],
             'password': config['gitlab']['password']
@@ -27,6 +30,9 @@ class GitlabUtil():
         self.gl = Gitlab(config['gitlab']['base_url'], oauth_token=token)
 
     def verify_project_exists(self, name):
+        if self.gl is None:
+            self.__init_client()
+            
         projects = self.gl.projects.list()
 
         for project in projects:
@@ -81,7 +87,7 @@ class GitUtil:
                         os.path.join(self._results_dir, 'pdf', f"{execution_tag}_{filename}"))
 
     def replace_repofile(self, src, target):
-        target=os.path.join(self._repopath, target)
+        target = os.path.join(self._repopath, target)
         os.remove(target)
         shutil.copyfile(src, target)
 

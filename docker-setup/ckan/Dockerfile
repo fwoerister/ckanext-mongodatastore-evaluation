@@ -60,6 +60,8 @@ RUN ckan-pip install -U pip && \
 
 # Setup mongodatastore
 RUN git clone https://github.com/fwoerister/ckanext-mongodatastore.git /usr/lib/ckan/venv/src/ckanext-mongodatastore
+RUN cd /usr/lib/ckan/venv/src/ckanext-mongodatastore && git checkout fw/refactorQueryPreprocessing
+
 RUN ckan-pip install -r /usr/lib/ckan/venv/src/ckanext-mongodatastore/requirements.txt
 
 RUN cd /usr/lib/ckan/venv/src/ckanext-mongodatastore && \
@@ -67,11 +69,11 @@ RUN cd /usr/lib/ckan/venv/src/ckanext-mongodatastore && \
     ckan-python setup.py develop
 
 # Setup reclinecitationview
-RUN git clone https://github.com/fwoerister/ckanext-reclinecitationview.git /usr/lib/ckan/venv/src/ckanext-reclinecitationview
-
-RUN cd /usr/lib/ckan/venv/src/ckanext-reclinecitationview && \
-    ckan-python setup.py install && \
-    ckan-python setup.py develop
+#RUN git clone https://github.com/fwoerister/ckanext-reclinecitationview.git /usr/lib/ckan/venv/src/ckanext-reclinecitationview
+#
+#RUN cd /usr/lib/ckan/venv/src/ckanext-reclinecitationview && \
+#    ckan-python setup.py install && \
+#    ckan-python setup.py develop
 
 USER ckan
 EXPOSE 5000

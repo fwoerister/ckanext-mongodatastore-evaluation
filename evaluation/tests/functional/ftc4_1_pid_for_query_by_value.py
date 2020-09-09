@@ -19,7 +19,7 @@ class PidForQueryByValueFunctionalTest(GenericFunctionalTest):
         self._stored_query_results = []
 
     def _check_precondition(self):
-        env.verify_containers_are_running()
+        #env.verify_containers_are_running()
         ckan.verify_if_evaluser_exists()
         ckan.verify_if_organization_exists('tu-wien')
         ckan.verify_package_does_exist('rr-experiment')
@@ -33,7 +33,7 @@ class PidForQueryByValueFunctionalTest(GenericFunctionalTest):
         sleep(5)
         self.logger.info("wait 5 seconds for background job to finish...")
 
-        self._stored_query_results.append(ckan.client.action.querystore_resolve(pid=self._pid))
+        self._stored_query_results.append(ckan.client.action.querystore_resolve(id=self._pid))
 
         new_record = {'id': 1278, 'Country': 'Australia', 'Year': 2010, 'Debt': 101136.25205, 'RGDP': None, 'GDP': None,
                       'dRGDP': 0.732249739168633, 'GDPI': 109.15168, 'GDP1': None, 'GDP2': 1201390, 'RGDP1': None,
@@ -42,7 +42,7 @@ class PidForQueryByValueFunctionalTest(GenericFunctionalTest):
                       'GDP3': None, 'GNI': None, 'lRGDP': None, 'lRGDP1': None, 'lRGDP2': 1092660}
         ckan.client.action.datastore_upsert(resource_id=self._resource_id, records=[new_record], method='insert',
                                             force=True)
-        self._stored_query_results.append(ckan.client.action.querystore_resolve(pid=self._pid))
+        self._stored_query_results.append(ckan.client.action.querystore_resolve(id=self._pid))
 
         new_record = {'id': 1, 'Country': 'Australia', 'Year': 2001, 'Debt': None, 'RGDP': None, 'GDP': None,
                       'dRGDP': None, 'GDPI': None, 'GDP1': None, 'GDP2': None, 'RGDP1': None,
@@ -52,10 +52,10 @@ class PidForQueryByValueFunctionalTest(GenericFunctionalTest):
 
         ckan.client.action.datastore_upsert(resource_id=self._resource_id, records=[new_record], method='upsert',
                                             force=True)
-        self._stored_query_results.append(ckan.client.action.querystore_resolve(pid=self._pid))
+        self._stored_query_results.append(ckan.client.action.querystore_resolve(id=self._pid))
 
         ckan.client.action.datastore_delete(resource_id=self._resource_id, filters={'Country': 'Japan'}, force=True)
-        self._stored_query_results.append(ckan.client.action.querystore_resolve(pid=self._pid))
+        self._stored_query_results.append(ckan.client.action.querystore_resolve(id=self._pid))
 
     def _check_postcondition(self):
         hash.verify_all_elements_have_same_hash(self._stored_query_results, hash.calculate_hash)

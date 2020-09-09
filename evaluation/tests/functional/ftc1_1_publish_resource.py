@@ -19,7 +19,7 @@ class PublishResourceFunctionalTest(GenericFunctionalTest):
         self._resource = None
 
     def _check_precondition(self):
-        env.verify_containers_are_running()
+        #env.verify_containers_are_running()
         ckan.verify_if_evaluser_exists()
         ckan.verify_if_organization_exists('tu-wien')
         ckan.ensure_package_does_not_exist('rr-experiment')
