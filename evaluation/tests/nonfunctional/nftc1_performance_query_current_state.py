@@ -14,6 +14,8 @@ import evaluation.util.ckan as ckan
 from evaluation.tests import GenericNonFunctionalTest
 from evaluation.util import mongodb
 
+RESULT_FILE_HEADER = 'filter;fulltext\n'
+
 RESULTS_DIR = os.environ.get('RESULTS_DIR')
 CHUNK_SIZE = 10000
 
@@ -65,7 +67,7 @@ class PerformanceQueryCurrentStateTest(GenericNonFunctionalTest):
         self.fulltext_queries = ['GET', 'gif', 'html']
 
         with open(os.path.join(self.results_dir, 'csv', f'{self.tag}_nftc1_result.csv'), 'a') as result_file:
-            result_file.writelines('filter;fulltext\n')
+            result_file.writelines(RESULT_FILE_HEADER)
 
     def _do_evaluation(self):
         with open(os.path.join(self.results_dir, 'csv', f'{self.tag}_nftc1_result.csv'), 'a') as result_file:

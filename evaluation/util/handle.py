@@ -4,7 +4,7 @@ import logging
 import requests
 
 STREAM_TEMPLATE = '{}/datadump/querystore_resolve/{}'
-API_TEMPLATE = '{}/api/3/action/querystore_resolve?pid={}'
+API_TEMPLATE = '{}/api/3/action/querystore_resolve?id={}'
 URL_TEMPLATE = '{}/querystore/view_query?id={}'
 
 logger = logging.getLogger(__name__)

@@ -32,6 +32,7 @@ services:
       - CKAN_DATASTORE_MG_WRITE_URL=mongodb://mongodb:27017
       - CKAN_DATASTORE_MG_READ_URL=mongodb://mongodb:27017
       - CKAN_DATASTORE_DATABASE=CKAN_Datastore
+      - CKAN_DATASTORE_SHARDING=True
       - CKAN_QUERYSTORE_URL=postgresql://ckan:ckan@db/querystore
       - CKAN_SOLR_URL=http://solr:8983/solr/ckan
       - CKAN_REDIS_URL=redis://redis:6379/1

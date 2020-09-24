@@ -24,7 +24,7 @@ class ExperimentRestFunctionalTest(GenericFunctionalTest):
 
     def _check_precondition(self):
         GitUtil.purge_repository()
-        env.verify_containers_are_running()
+        #env.verify_containers_are_running()
         ckan.verify_package_does_exist('rr-experiment')
         self._resource_id = ckan.verify_package_contains_resource('rr-experiment',
                                                                   {'name': 'countries_dataset.csv',
@@ -39,8 +39,10 @@ class ExperimentRestFunctionalTest(GenericFunctionalTest):
         self.logger.info("wait 5 seconds for background job to finish...")
         sleep(5)
 
-        response = ckan.client.action.querystore_resolve(pid=pid)
+        response = ckan.client.action.querystore_resolve(id=pid)
         pid = response['query']['handle_pid']
+
+        print(pid)
 
         # publish source code to gitlab
         git_util = GitUtil('http://root:gitlab_passwd@localhost:8081/root/rr-experiment.git',

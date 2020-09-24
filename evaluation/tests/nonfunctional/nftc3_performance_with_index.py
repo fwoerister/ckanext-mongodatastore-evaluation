@@ -9,7 +9,11 @@ import numpy
 
 import evaluation.util.ckan as ckan
 import evaluation.util.mongodb as mongodb
+import evaluation.util.env as env
+import evaluation.util.postgresql as postgresql
 from evaluation.tests import GenericNonFunctionalTest
+
+RESULT_FILE_HEADER = 'index;no index\n'
 
 
 class PerformanceIndexUsage(GenericNonFunctionalTest):
@@ -23,7 +27,8 @@ class PerformanceIndexUsage(GenericNonFunctionalTest):
         ckan.verify_if_organization_exists('tu-wien')
 
         ckan.ensure_package_does_not_exist('ucbtrace')
-        mongodb.purge_indexes('CKAN_Datastore')
+        if env.container_runs('mongodb'):
+            mongodb.purge_indexes('CKAN_Datastore')
 
         package = ckan.client.action.package_create(name='ucbtrace', title='UC Berkeley Home IP Web Traces',
                                                     private=False,
@@ -54,7 +59,10 @@ class PerformanceIndexUsage(GenericNonFunctionalTest):
                                                    repeat=1,
                                                    number=1))
 
-        mongodb.purge_index(self._resource_id, 'client_port_index')
+        if env.container_runs('mongodb'):
+            mongodb.purge_index(self._resource_id, 'client_port_index')
+        else:
+            postgresql.remove_index(self._resource_id, 'client_port')
         sleep(5)
 
         for query in self._queries:
@@ -63,5 +71,5 @@ class PerformanceIndexUsage(GenericNonFunctionalTest):
                                                number=1))
 
         with open(os.path.join(self.results_dir, 'csv', f'{self.tag}_nftc3_response_times.csv'), 'a') as result_file:
-            result_file.writelines('index;no index\n')
+            result_file.writelines(RESULT_FILE_HEADER)
             result_file.writelines(f'{numpy.average(response_time_idx)};{numpy.average(response_time)}\n')

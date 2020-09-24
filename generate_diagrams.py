@@ -42,14 +42,12 @@ def read_input_dir():
 def extract_testcase_list_data(testcase, column, data_dict):
     tc_dict = data_dict[testcase]
 
-    data = []
-    labels = []
+    data = {}
 
     for key in tc_dict.keys():
-        data.append(tc_dict[key][column])
-        labels.append(key)
+        data[key] = tc_dict[key][column]
 
-    return labels, data
+    return data
 
 
 def extract_testcase_dict_data(testcase, data_dict):
@@ -79,26 +77,30 @@ def extract_testcase_dict_data(testcase, data_dict):
 def main():
     data_dict = read_input_dir()
 
-    label, data = extract_testcase_list_data('nftc1', 'filter', data_dict)
-    x = numpy.arange(len(data[0])) + 1
+    data = extract_testcase_list_data('nftc1', 'filter', data_dict)
+    x = numpy.arange(0.5, 9.6, step=0.5)
     generate_line_chart(x, data, '# of records (in millions)', 'response time in seconds', 'Non-Functional Test 1', 15,
-                        os.path.join(CHARTS_DIR, 'nftc1_diagram_filter.png'))
+                        True, os.path.join(CHARTS_DIR, 'nftc1_diagram_filter.png'))
 
-    label, data = extract_testcase_list_data('nftc1', 'fulltext', data_dict)
-    x = numpy.arange(len(data[0])) + 1
+    data = extract_testcase_list_data('nftc1', 'fulltext', data_dict)
+    x = numpy.arange(0.5, 9.6, step=0.5)
     generate_line_chart(x, data, '# of records (in millions)', 'response time in seconds', 'Non-Functional Test 1', 15,
-                        os.path.join(CHARTS_DIR, 'nftc1_diagram_fulltext.png'))
+                        True, os.path.join(CHARTS_DIR, 'nftc1_diagram_fulltext.png'))
 
-    label, data = extract_testcase_list_data('nftc2', 'stored_query', data_dict)
-    x = numpy.arange(len(data[0])) + 1
+    data = extract_testcase_list_data('nftc2', 'filter', data_dict)
+    x = numpy.arange(0.5, 8.6, step=0.5)
     generate_line_chart(x, data, '# of records (in millions)', 'response time in seconds', 'Non-Functional Test 2', 3,
-                        os.path.join(CHARTS_DIR, 'nftc2_diagram.png'))
+                        False, os.path.join(CHARTS_DIR, 'nftc2_diagram_filter.png'))
+
+    data = extract_testcase_list_data('nftc2', 'fulltext', data_dict)
+    x = numpy.arange(0.5, 8.6, step=0.5)
+    generate_line_chart(x, data, '# of records (in millions)', 'response time in seconds', 'Non-Functional Test 2', 3,
+                        False, os.path.join(CHARTS_DIR, 'nftc2_diagram_fulltext.png'))
 
     labels, data = extract_testcase_dict_data('nftc3', data_dict)
 
     generate_bar_chart(data, 'response time in seconds', 'performance impact sharding/indexing', labels,
                        os.path.join(CHARTS_DIR, 'nftc3_diagram.png'))
-
 
 if __name__ == "__main__":
     main()
