@@ -58,22 +58,23 @@ RUN ckan-pip install -U pip && \
     chmod +x /ckan-entrypoint.sh && \
     chown -R ckan:ckan $CKAN_HOME $CKAN_VENV $CKAN_CONFIG $CKAN_STORAGE_PATH
 
-# Setup mongodatastore
-RUN git clone https://github.com/fwoerister/ckanext-mongodatastore.git /usr/lib/ckan/venv/src/ckanext-mongodatastore
-RUN cd /usr/lib/ckan/venv/src/ckanext-mongodatastore && git checkout fw/refactorQueryPreprocessing
+# install harvest plugin
 
+RUN ckan-pip install -e git+https://github.com/ckan/ckanext-harvest.git@v1.2.1#egg=ckanext-harvest
+RUN ckan-pip install -r /usr/lib/ckan/venv/src/ckanext-harvest/pip-requirements.txt
+
+# install dcat plugin
+
+RUN ckan-pip install -e git+https://github.com/ckan/ckanext-dcat.git@v1.0.0#egg=ckanext-dcat
+RUN ckan-pip install -r /usr/lib/ckan/venv/src/ckanext-dcat/requirements.txt
+
+# install mongodatastore plugin
+RUN git clone https://github.com/fwoerister/ckanext-mongodatastore.git /usr/lib/ckan/venv/src/ckanext-mongodatastore
 RUN ckan-pip install -r /usr/lib/ckan/venv/src/ckanext-mongodatastore/requirements.txt
 
 RUN cd /usr/lib/ckan/venv/src/ckanext-mongodatastore && \
     ckan-python setup.py install && \
     ckan-python setup.py develop
-
-# Setup reclinecitationview
-#RUN git clone https://github.com/fwoerister/ckanext-reclinecitationview.git /usr/lib/ckan/venv/src/ckanext-reclinecitationview
-#
-#RUN cd /usr/lib/ckan/venv/src/ckanext-reclinecitationview && \
-#    ckan-python setup.py install && \
-#    ckan-python setup.py develop
 
 USER ckan
 EXPOSE 5000

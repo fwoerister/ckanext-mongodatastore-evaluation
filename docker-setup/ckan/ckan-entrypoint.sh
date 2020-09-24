@@ -48,13 +48,15 @@ ckan-paster --plugin=ckan config-tool "$CONFIG" -e \
   "ckan.datastore.read_url = ${CKAN_DATASTORE_MG_READ_URL}" \
   "ckan.site_url = ${CKAN_SITE_URL}" \
   "ckan.site_id = ${CKAN_SITE_ID}" \
-  "ckan.plugins = stats text_view image_view datapusher datastore mongodatastore reclinecitationview" \
-  "ckan.views.default_views = image_view text_view reclinecitation_view"
+  "ckan.plugins = stats text_view image_view datapusher datastore mongodatastore reclinecitationview landingpageview harvest ckan_harvester dcat dcat_rdf_harvester dcat_json_harvester dcat_json_interface structured_data" \
+  "ckan.views.default_views = image_view text_view reclinecitation_view landingpage_view"
 
 sed "/\[app:main\]/a ckanext.mongodatastore.mongodb_url=${CKAN_DATASTORE_MG_WRITE_URL}" "$CONFIG" -i.bkp
 sed "/\[app:main\]/a ckanext.mongodatastore.querystore_url=${CKAN_QUERYSTORE_URL}" "$CONFIG" -i.bkp
 sed "/\[app:main\]/a ckanext.mongodatastore.sharding_enabled=${CKAN_DATASTORE_SHARDING}" "$CONFIG" -i.bkp
 sed "/\[app:main\]/a ckanext.mongodatastore.database_name=${CKAN_DATASTORE_DATABASE}" "$CONFIG" -i.bkp
+sed "/\[app:main\]/a ckan.harvest.mq.type = redis" "$CONFIG" -i.bkp
+sed "/\[app:main\]/a ckan.harvest.mq.hostname = redis" "$CONFIG" -i.bkp
 
 cd /usr/lib/ckan/venv/src/ckan
 # start worker
@@ -66,7 +68,6 @@ ckan-paster --plugin=ckan db init -c "${CKAN_CONFIG}/production.ini"
 # install mongodatastore
 cd /usr/lib/ckan/venv/src/ckanext-mongodatastore
 ckan-paster --plugin=ckan querystore create_schema -c "${CKAN_CONFIG}/production.ini"
-
 
 # evaluser:passme123
 psql -U ckan -h db -d ckan -c "INSERT INTO public.user (id, name, apikey, created, about, password, fullname, email, reset_key, sysadmin, activity_streams_email_notifications, state) VALUES ('ff7f6a70-605f-4ad2-b70c-7d70b0fb6c30', 'evaluser', '302b24d4-8a23-47bd-baef-b8e8236d27a3', '2020-03-20 11:11:50.794895', null, '\$pbkdf2-sha512\$25000\$fm8N4VyrtbZWyhnDWEspZQ\$PUKHskPZazAKOMOaM/WMCG7q7DHAQExf9ux.K.QyGFmXxQ.7UDPQsY3b6qgQHD3wOSEl5lSKLKlzhBZBmJGPCw', null, 'evaluser@localhost', null, true, false, 'active') on conflict do nothing;"
