@@ -24,7 +24,6 @@ class ExperimentRestFunctionalTest(GenericFunctionalTest):
 
     def _check_precondition(self):
         GitUtil.purge_repository()
-        #env.verify_containers_are_running()
         ckan.verify_package_does_exist('rr-experiment')
         self._resource_id = ckan.verify_package_contains_resource('rr-experiment',
                                                                   {'name': 'countries_dataset.csv',

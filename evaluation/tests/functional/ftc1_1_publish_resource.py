@@ -19,7 +19,6 @@ class PublishResourceFunctionalTest(GenericFunctionalTest):
         self._resource = None
 
     def _check_precondition(self):
-        #env.verify_containers_are_running()
         ckan.verify_if_evaluser_exists()
         ckan.verify_if_organization_exists('tu-wien')
         ckan.ensure_package_does_not_exist('rr-experiment')
@@ -28,7 +27,7 @@ class PublishResourceFunctionalTest(GenericFunctionalTest):
         self.logger.debug("execute test steps...")
         package = ckan.client.action.package_create(name='rr-experiment', title='Reinhard&Rogoff Experiment Data',
                                                     private=False,
-                                                    owner_org='dc13c7c9-c3c9-42ac-8200-8fe007c049a1',
+                                                    owner_org='tu-wien',
                                                     author='Carmen Reinhart; Kenneth Rogoff',
                                                     maintainer='', license='other-open',
                                                     extras=[{'key': 'year', 'value': '2010'}])

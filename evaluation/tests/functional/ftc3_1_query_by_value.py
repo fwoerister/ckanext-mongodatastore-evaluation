@@ -16,7 +16,6 @@ class QueryByValueFunctionalTest(GenericFunctionalTest):
         self._query_result = None
 
     def _check_precondition(self):
-        #env.verify_containers_are_running()
         ckan.verify_if_evaluser_exists()
         ckan.verify_if_organization_exists('tu-wien')
         ckan.verify_package_does_exist('rr-experiment')

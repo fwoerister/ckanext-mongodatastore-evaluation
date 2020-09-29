@@ -1,15 +1,17 @@
 # See CKAN docs on installation from Docker Compose on usage
-FROM debian:jessie
+FROM ubuntu:20.04
 MAINTAINER Open Knowledge
 
 # Install required system packages
+
+RUN ln -fs /usr/share/zoneinfo/Europe/Vienna /etc/localtime
 RUN apt-get -q -y update \
     && DEBIAN_FRONTEND=noninteractive apt-get -q -y upgrade \
     && apt-get -q -y install \
-        python-dev \
-        python-pip \
-        python-virtualenv \
-        python-wheel \
+        python3-dev \
+        python3-pip \
+        python3-virtualenv \
+        python3-wheel \
         libpq-dev \
         libxml2-dev \
         libxslt-dev \
@@ -24,6 +26,7 @@ RUN apt-get -q -y update \
         dos2unix \
     && apt-get -q clean \
     && rm -rf /var/lib/apt/lists/*
+RUN dpkg-reconfigure --frontend noninteractive tzdata
 
 # Define environment variables
 ENV CKAN_HOME /usr/lib/ckan
@@ -40,43 +43,38 @@ RUN useradd -r -u 900 -m -c "ckan account" -d $CKAN_HOME -s /bin/false ckan
 # Setup virtual environment for CKAN
 RUN mkdir -p $CKAN_VENV $CKAN_CONFIG $CKAN_STORAGE_PATH && \
     virtualenv $CKAN_VENV && \
-    ln -s $CKAN_VENV/bin/pip /usr/local/bin/ckan-pip &&\
-    ln -s $CKAN_VENV/bin/paster /usr/local/bin/ckan-paster &&\
-    ln -s $CKAN_VENV/bin/python /usr/local/bin/ckan-python
+    ln -s $CKAN_VENV/bin/pip3 /usr/local/bin/ckan-pip &&\
+    ln -s $CKAN_VENV/bin/ckan /usr/local/bin/ckan
 
 # Setup CKAN
-RUN ckan-pip install setuptools==36.1
-RUN ckan-pip install -e 'git+https://github.com/ckan/ckan.git@ckan-2.8.2#egg=ckan'
+RUN ckan-pip install setuptools==44.1.0
+RUN ckan-pip install --upgrade pip
+RUN ckan-pip install -e 'git+https://github.com/ckan/ckan.git@ckan-2.9.0#egg=ckan[requirements]'
 
 COPY ckan/ckan-entrypoint.sh ./ckan-entrypoint.sh
 RUN dos2unix ./ckan-entrypoint.sh
 COPY ckan/cred.json /etc/ckan/cred.json
 RUN ckan-pip install -U pip && \
     ckan-pip install --upgrade --no-cache-dir -r $CKAN_VENV/src/ckan/requirements.txt && \
-    ckan-pip install -e $CKAN_VENV/src/ckan/ && \
     ln -s $CKAN_VENV/src/ckan/ckan/config/who.ini $CKAN_CONFIG/who.ini && \
     chmod +x /ckan-entrypoint.sh && \
     chown -R ckan:ckan $CKAN_HOME $CKAN_VENV $CKAN_CONFIG $CKAN_STORAGE_PATH
 
 # install harvest plugin
-
-RUN ckan-pip install -e git+https://github.com/ckan/ckanext-harvest.git@v1.2.1#egg=ckanext-harvest
-RUN ckan-pip install -r /usr/lib/ckan/venv/src/ckanext-harvest/pip-requirements.txt
+RUN ckan-pip install -e git+https://github.com/ckan/ckanext-harvest.git@master#egg=ckanext-harvest
+RUN ckan-pip install -r /usr/lib/ckan/venv/src/ckanext-harvest/pip-requirements.txt --use-feature=2020-resolver
 
 # install dcat plugin
 
-RUN ckan-pip install -e git+https://github.com/ckan/ckanext-dcat.git@v1.0.0#egg=ckanext-dcat
-RUN ckan-pip install -r /usr/lib/ckan/venv/src/ckanext-dcat/requirements.txt
+RUN ckan-pip install -e git+https://github.com/ckan/ckanext-dcat.git@master#egg=ckanext-dcat
+RUN ckan-pip install -r /usr/lib/ckan/venv/src/ckanext-dcat/requirements.txt --use-feature=2020-resolver
 
 # install mongodatastore plugin
-RUN git clone https://github.com/fwoerister/ckanext-mongodatastore.git /usr/lib/ckan/venv/src/ckanext-mongodatastore
-RUN ckan-pip install -r /usr/lib/ckan/venv/src/ckanext-mongodatastore/requirements.txt
-
-RUN cd /usr/lib/ckan/venv/src/ckanext-mongodatastore && \
-    ckan-python setup.py install && \
-    ckan-python setup.py develop
+RUN ckan-pip install -e git+https://github.com/fwoerister/ckanext-mongodatastore.git#egg=ckanext-mongodatastore
+RUN ckan-pip install -r /usr/lib/ckan/venv/src/ckanext-mongodatastore/requirements.txt --use-feature=2020-resolver
 
 USER ckan
 EXPOSE 5000
 
 ENTRYPOINT ["/ckan-entrypoint.sh"]
+CMD ["ckan","-c","/etc/ckan/production.ini", "run", "--host", "0.0.0.0"]
