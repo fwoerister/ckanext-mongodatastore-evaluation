@@ -13,3 +13,4 @@ numpy~=1.19.1
 requests~=2.24.0
 setuptools~=49.6.0
 matplotlib~=3.3.1
+pyzenodo3~=1.0.2
