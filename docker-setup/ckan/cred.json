@@ -1,5 +1,4 @@
 {
-    "client": "rest",
     "handle_server_url": "https://handle_server:8000",
     "prefix": "TEST",
     "username": "300%3ATEST/ADMIN",
