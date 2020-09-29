@@ -7,7 +7,6 @@
 from time import sleep
 
 import evaluation.util.ckan as ckan
-import evaluation.util.env as env
 import evaluation.util.solr as solr
 from evaluation.tests import GenericFunctionalTest
 
@@ -36,8 +35,8 @@ class PublishResourceFunctionalTest(GenericFunctionalTest):
                                                             name='countries_dataset.csv',
                                                             upload=open('data/datasets/countries_dataset.csv', 'r'))
 
-        self.logger.info("wait 10 seconds for datapusher...")
-        sleep(10)
+        self.logger.info("wait 5 seconds for datapusher...")
+        sleep(5)
 
     def _check_postcondition(self):
         # *) package was indexed
@@ -50,3 +49,7 @@ class PublishResourceFunctionalTest(GenericFunctionalTest):
         # *) the metadata is stored in ckan
         assert (package['author'] == 'Carmen Reinhart; Kenneth Rogoff')
         assert (package['extras'] == [{'key': 'year', 'value': '2010'}])
+
+        ckan.verify_package_contains_resource('rr-experiment',
+                                              {'name': 'countries_dataset.csv',
+                                               'datastore_active': True})

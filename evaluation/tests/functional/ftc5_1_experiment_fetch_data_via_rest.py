@@ -4,6 +4,7 @@
 from time import sleep
 
 from evaluation.tests import GenericFunctionalTest
+from evaluation.tests.functional.static_test_assets import PACKAGE, RESOURCE_FILE_LOCATION
 from evaluation.util import ckan
 from evaluation.util import env
 from evaluation.util.script import run_r_script
@@ -24,6 +25,8 @@ class ExperimentRestFunctionalTest(GenericFunctionalTest):
 
     def _check_precondition(self):
         GitUtil.purge_repository()
+        ckan.reset_package_to_initial_state(PACKAGE, RESOURCE_FILE_LOCATION)
+
         ckan.verify_package_does_exist('rr-experiment')
         self._resource_id = ckan.verify_package_contains_resource('rr-experiment',
                                                                   {'name': 'countries_dataset.csv',

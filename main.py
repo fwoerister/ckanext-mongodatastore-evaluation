@@ -36,22 +36,22 @@ def main():
     os.mkdir(f'{results_dir}/log')
     os.mkdir(f'{results_dir}/pdf')
 
-    functional_tests = f_tests.initialize(results_dir)
-    nonfunctional_tests = nf_tests.initialize(results_dir)
+    f_tests.initialize(results_dir)
+    nf_tests.initialize(results_dir)
 
-    if not check_testcase_labels(args.functional, functional_tests, 'functional'):
+    if not check_testcase_labels(args.functional, f_tests.FUNCTIONAL_TESTS, 'functional'):
         exit(-1)
-    if not check_testcase_labels(args.nonfunctional, nonfunctional_tests, 'non-functional'):
+    if not check_testcase_labels(args.nonfunctional, nf_tests.NON_FUNCTIONAL_TESTS, 'non-functional'):
         exit(-1)
 
-    run_test_subset(args.functional, functional_tests)
-    run_test_subset(args.nonfunctional, nonfunctional_tests)
+    run_test_subset(args.functional, f_tests.FUNCTIONAL_TESTS)
+    run_test_subset(args.nonfunctional, nf_tests.NON_FUNCTIONAL_TESTS)
 
     if args.functional is None and args.nonfunctional is None:
-        for tag in functional_tests.keys():
-            functional_tests[tag].run(args.tag)
-        for tag in nonfunctional_tests.keys():
-            nonfunctional_tests[tag].run(args.tag)
+        for tag in f_tests.FUNCTIONAL_TESTS.keys():
+            f_tests.FUNCTIONAL_TESTS[tag].run(args.tag)
+        for tag in nf_tests.NON_FUNCTIONAL_TESTS.keys():
+            nf_tests.NON_FUNCTIONAL_TESTS[tag].run(args.tag)
 
 
 def run_test_subset(passed_argument_tags, functional_tests):

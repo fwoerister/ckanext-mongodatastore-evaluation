@@ -2,15 +2,9 @@
 # Insert new records to an existing datastore resource.
 
 import evaluation.util.ckan as ckan
-import evaluation.util.env as env
 import evaluation.util.mongodb as mongodb
 from evaluation.tests import GenericFunctionalTest
-
-NEW_RECORD = {'id': 1276, 'Country': 'Australia', 'Year': 2010, 'Debt': 101136.25205, 'RGDP': None, 'GDP': None,
-              'dRGDP': 0.732249739168633, 'GDPI': 109.15168, 'GDP1': None, 'GDP2': 1201390, 'RGDP1': None,
-              'RGDP2': 1100661, 'GDPI1': None, 'GDPI2': None, 'Infl': '1.629', 'Debt1': None, 'Debt2': None,
-              'Debtalt': None, 'GDP2alt': None, 'GDPalt': None, 'RGDP2alt': None, 'debtgdp': 8.41826984160015,
-              'GDP3': None, 'GNI': None, 'lRGDP': None, 'lRGDP1': None, 'lRGDP2': 1092660}
+from evaluation.tests.functional.static_test_assets import PACKAGE, RESOURCE_FILE_LOCATION, NEW_RECORD
 
 
 class InsertRecordFunctionalTest(GenericFunctionalTest):
@@ -23,12 +17,12 @@ class InsertRecordFunctionalTest(GenericFunctionalTest):
         ckan.verify_if_evaluser_exists()
         ckan.verify_if_organization_exists('tu-wien')
 
+        ckan.reset_package_to_initial_state(PACKAGE, RESOURCE_FILE_LOCATION)
+
         ckan.verify_package_does_exist('rr-experiment')
         self._resource_id = ckan.verify_package_contains_resource('rr-experiment',
                                                                   {'name': 'countries_dataset.csv',
                                                                    'datastore_active': True})
-
-        mongodb.remove_datastore_entries_by_id(self._resource_id, 1276)
 
     def _execute_steps(self):
         ckan.client.action.datastore_upsert(resource_id=self._resource_id, force=True, records=[NEW_RECORD],

@@ -13,9 +13,10 @@ from evaluation.tests.functional.ftc4_4_pid_for_sorted_query import PidForSorted
 from evaluation.tests.functional.ftc5_1_experiment_fetch_data_via_rest import ExperimentRestFunctionalTest
 from evaluation.tests.functional.ftc5_2_experiment_fetch_data_via_cli import ExperimentCliFunctionalTest
 
+FUNCTIONAL_TESTS = {}
 
 def initialize(results_dir):
-    return {
+    FUNCTIONAL_TESTS.update({
         '1.1': PublishResourceFunctionalTest(results_dir, 'ftc1_1_publish_resource'),
         '2.1': InsertRecordFunctionalTest(results_dir, 'ftc2_1_insert_record'),
         '2.2': ModifyRecordFunctionalTest(results_dir, 'ftc2_2_modify_record'),
@@ -30,6 +31,4 @@ def initialize(results_dir):
         '4.4': PidForSortedQueryFunctionalTest(results_dir, 'ftc4_4_pid_for_sorted_query.py'),
         '5.1': ExperimentRestFunctionalTest(results_dir, 'ftc5_1_experiment_fetch_data_via_rest'),
         '5.2': ExperimentCliFunctionalTest(results_dir, 'ftc5_2_experiment_fetch_data_via_cli')
-    }
-
-
+    })
