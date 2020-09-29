@@ -11,7 +11,11 @@
     "core": "ckan"
   },
   "handle": {
-    "base_url": "http://localhost:8000"
+    "handle_server_url": "https://localhost:8000",
+    "prefix": "TEST",
+    "username": "300%3ATEST/ADMIN",
+    "password": "ASECRETKEY",
+    "HTTPS_verify": false
   },
   "querystore": {
     "db_url": "postgresql://ckan:ckan@localhost/querystore"
