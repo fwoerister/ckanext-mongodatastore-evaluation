@@ -6,6 +6,7 @@ import evaluation.util.ckan as ckan
 import evaluation.util.env as env
 import evaluation.util.hash as hash
 from evaluation.tests import GenericFunctionalTest
+from evaluation.tests.functional.static_test_assets import PACKAGE, RESOURCE_FILE_LOCATION
 
 
 class QueryByValueFunctionalTest(GenericFunctionalTest):
@@ -16,9 +17,10 @@ class QueryByValueFunctionalTest(GenericFunctionalTest):
         self._query_result = None
 
     def _check_precondition(self):
-        #env.verify_containers_are_running()
         ckan.verify_if_evaluser_exists()
         ckan.verify_if_organization_exists('tu-wien')
+        ckan.reset_package_to_initial_state(PACKAGE, RESOURCE_FILE_LOCATION)
+
         ckan.verify_package_does_exist('rr-experiment')
         self._resource_id = ckan.verify_package_contains_resource('rr-experiment',
                                                                   {'name': 'countries_dataset.csv',

@@ -7,9 +7,11 @@ TRACE_DATASET = 'data/datasets/preprocessed_trace'
 TRACE_REMAINING = 'data/datasets/preprocessed_trace_remaining'
 TRACE_SMALL = 'data/datasets/preprocessed_trace_100000'
 
+NON_FUNCTIONAL_TESTS = {}
+
 
 def initialize(results_dir):
-    return {
+    NON_FUNCTIONAL_TESTS.update({
         '1': PerformanceQueryCurrentStateTest(results_dir, 'nftc1_performance_query_current_state',
                                               TRACE_DATASET, 10000, 500000),
         '2': PerformanceStoredQueryTest(results_dir, 'nftc2_performance_stored_query',
@@ -17,5 +19,5 @@ def initialize(results_dir):
         '3': PerformanceIndexUsage(results_dir, 'nftc3_performance_with_index',
                                    TRACE_DATASET, 10000, 500000),
         '4': PerformanceNonVersionedMongoResource(results_dir, 'nftc4_performance_non_versioned_mongodb',
-                                   TRACE_DATASET, 10000, 500000),
-    }
+                                                  TRACE_DATASET, 10000, 500000),
+    })

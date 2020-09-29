@@ -1,5 +1,7 @@
 import json
 import logging
+import os
+from time import sleep
 
 import ckanapi
 import requests
@@ -37,6 +39,19 @@ def verify_package_does_exist(pkg_name):
         return pkg['id']
     except NotFound as e:
         raise AssertionError(e)
+
+
+def reset_package_to_initial_state(package, resource_file):
+    ensure_package_does_not_exist(package['name'])
+
+    package = client.action.package_create(**package)
+
+    resource = client.action.resource_create(package_id=package['id'],
+                                             name=os.path.basename(resource_file), upload=open(resource_file, 'r'))
+
+    sleep(5)
+
+    return resource['id']
 
 
 def verify_package_contains_resource(pkg_name, expected_resource):

@@ -3,9 +3,9 @@ import logging
 
 import requests
 
-STREAM_TEMPLATE = '{}/datadump/querystore_resolve/{}'
+STREAM_TEMPLATE = '{}/storedquery/{}/dump'
 API_TEMPLATE = '{}/api/3/action/querystore_resolve?id={}'
-URL_TEMPLATE = '{}/querystore/view_query?id={}'
+URL_TEMPLATE = '{}/storedquery/landingpage?id={}'
 
 logger = logging.getLogger(__name__)
 
