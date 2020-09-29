@@ -32,7 +32,7 @@ class PerformanceIndexUsage(GenericNonFunctionalTest):
 
         package = ckan.client.action.package_create(name='ucbtrace', title='UC Berkeley Home IP Web Traces',
                                                     private=False,
-                                                    owner_org='dc13c7c9-c3c9-42ac-8200-8fe007c049a1',
+                                                    owner_org='tu-wien',
                                                     author='Steve Gribble',
                                                     maintainer='', license='other-open',
                                                     extras=[{'key': 'year', 'value': '2017'}])
