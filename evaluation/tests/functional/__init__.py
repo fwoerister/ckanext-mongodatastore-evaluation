@@ -15,6 +15,7 @@ from evaluation.tests.functional.ftc5_2_experiment_fetch_data_via_cli import Exp
 
 FUNCTIONAL_TESTS = {}
 
+
 def initialize(results_dir):
     FUNCTIONAL_TESTS.update({
         '1.1': PublishResourceFunctionalTest(results_dir, 'ftc1_1_publish_resource'),
