@@ -1,7 +1,8 @@
 # See CKAN docs on installation from Docker Compose on usage
-FROM ubuntu:18.06
+FROM ubuntu:20.04
 
 # Install required system packages
+RUN ln -fs /usr/share/zoneinfo/Europe/Vienna /etc/localtime
 RUN apt-get -q -y update \
     && DEBIAN_FRONTEND=noninteractive apt-get -q -y upgrade \
     && apt-get -q -y install \
@@ -25,6 +26,7 @@ RUN apt-get -q -y update \
         dos2unix \
     && apt-get -q clean \
     && rm -rf /var/lib/apt/lists/*
+RUN dpkg-reconfigure --frontend noninteractive tzdata
 
 RUN git clone https://github.com/ckan/datapusher.git
 
