@@ -1,5 +1,5 @@
-# docker-compose build && docker-compose up -d
-# If "docker-compose logs ckan" shows DB not ready, run "docker-compose restart ckan" a few times.
+# this docker-compose file (+ the assets in the folders ckan, ckan_legacy, postgresql, solr) is based on the provided docker-compose file of the ckan repository (located in the contrib/docker folder)
+# https://github.com/ckan/ckan/tree/master/contrib/docker
 version: "3"
 
 volumes:
@@ -86,6 +86,8 @@ services:
     container_name: redis
     image: redis:latest
 
+  # the handle_server setup (including the files in the 'handle' folder) is based on the ideas of this github repository:
+  # https://github.com/datacite/docker-handle
   handle_server:
     container_name: handle_server
     image: handle_svr
@@ -113,6 +115,8 @@ services:
       TRACE_RESOLUTION: 'yes'
       TEMPLATE_NS_OVERRIDE: 'yes'
 
+  # the gitlab setup is based on the gitlab documentation
+  # https://docs.gitlab.com/omnibus/docker/#install-gitlab-using-docker-compose
   gitlab:
     image: 'gitlab/gitlab-ee:latest'
     container_name: gitlab
@@ -127,6 +131,8 @@ services:
       - '8081:8081'
       - '2224:22'
 
+  # the mongodb setup (including the files in the 'mongodb' folder) is based on the ideas of this github repository:
+  # https://github.com/chefsplate/mongo-shard-docker-compose/
   mdb-config:
     container_name: mdb-config
     image: mongo:4.4.0-bionic

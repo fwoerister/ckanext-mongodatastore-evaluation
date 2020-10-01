@@ -1,5 +1,5 @@
-# docker-compose build && docker-compose up -d
-# If "docker-compose logs ckan" shows DB not ready, run "docker-compose restart ckan" a few times.
+# this docker-compose file (+ the assets in the folders ckan, ckan_legacy, postgresql, solr) is based on the provided docker-compose file of the ckan repository (located in the contrib/docker folder)
+# https://github.com/ckan/ckan/tree/master/contrib/docker
 version: "3"
 
 volumes:
