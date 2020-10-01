@@ -60,12 +60,12 @@ RUN ckan-pip install -U pip && \
     chown -R ckan:ckan $CKAN_HOME $CKAN_VENV $CKAN_CONFIG $CKAN_STORAGE_PATH
 
 # install harvest plugin
-RUN ckan-pip install -e git+https://github.com/ckan/ckanext-harvest.git@master#egg=ckanext-harvest
-RUN ckan-pip install -r /usr/lib/ckan/venv/src/ckanext-harvest/pip-requirements.txt --use-feature=2020-resolver
+RUN ckan-pip install -e git+https://github.com/ckan/ckanext-harvest.git@v1.3.1#egg=ckanext-harvest
+RUN ckan-pip install -r /usr/lib/ckan/venv/src/ckanext-harvest/pip-requirements.txt
 
 # install dcat plugin
-RUN ckan-pip install -e git+https://github.com/ckan/ckanext-dcat.git@master#egg=ckanext-dcat
-RUN ckan-pip install -r /usr/lib/ckan/venv/src/ckanext-dcat/requirements.txt --use-feature=2020-resolver
+RUN ckan-pip install -e git+https://github.com/ckan/ckanext-dcat.git@v1.1.0#egg=ckanext-dcat
+RUN ckan-pip install -r /usr/lib/ckan/venv/src/ckanext-dcat/requirements.txt
 
 # install zippreview plugin
 RUN ckan-pip install -e git+https://github.com/fwoerister/ckanext-zippreview.git@fw/bugfix#egg=ckanext-zippreview

@@ -102,5 +102,6 @@ def main():
     generate_bar_chart(data, 'response time in seconds', 'performance impact sharding/indexing', labels,
                        os.path.join(CHARTS_DIR, 'nftc3_diagram.png'))
 
+
 if __name__ == "__main__":
     main()

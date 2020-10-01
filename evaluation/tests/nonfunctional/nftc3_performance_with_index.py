@@ -8,8 +8,8 @@ from time import sleep
 import numpy
 
 import evaluation.util.ckan as ckan
-import evaluation.util.mongodb as mongodb
 import evaluation.util.env as env
+import evaluation.util.mongodb as mongodb
 import evaluation.util.postgresql as postgresql
 from evaluation.tests import GenericNonFunctionalTest
 
