@@ -20,3 +20,7 @@ MODIFIED_RECORD = {'id': 1, 'Country': 'Australia', 'Year': 2000, 'Debt': None, 
                    'RGDP2': None, 'GDPI1': None, 'GDPI2': None, 'Infl': None, 'Debt1': None, 'Debt2': None,
                    'Debtalt': None, 'GDP2alt': None, 'GDPalt': None, 'RGDP2alt': None, 'debtgdp': None,
                    'GDP3': None, 'GNI': None, 'lRGDP': None, 'lRGDP1': None, 'lRGDP2': None}
+
+SUBSET_QUERY = {'Year': {'$gte': 1946}, 'Year': {'$lte': 2009},
+                '$or': [{'Year': {'$not': {'$lt': 1951}}},
+                        {'Country': {'$not': {'$eq': 'Italy'}}}]}
