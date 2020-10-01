@@ -1,13 +1,12 @@
 # See CKAN docs on installation from Docker Compose on usage
 FROM ubuntu:20.04
-MAINTAINER Open Knowledge
 
 # Install required system packages
-
 RUN ln -fs /usr/share/zoneinfo/Europe/Vienna /etc/localtime
 RUN apt-get -q -y update \
     && DEBIAN_FRONTEND=noninteractive apt-get -q -y upgrade \
     && apt-get -q -y install \
+        python3 \
         python3-dev \
         python3-pip \
         python3-virtualenv \
@@ -42,14 +41,14 @@ RUN useradd -r -u 900 -m -c "ckan account" -d $CKAN_HOME -s /bin/false ckan
 
 # Setup virtual environment for CKAN
 RUN mkdir -p $CKAN_VENV $CKAN_CONFIG $CKAN_STORAGE_PATH && \
-    virtualenv $CKAN_VENV && \
+    python3 -m virtualenv -p python3 $CKAN_VENV && \
     ln -s $CKAN_VENV/bin/pip3 /usr/local/bin/ckan-pip &&\
     ln -s $CKAN_VENV/bin/ckan /usr/local/bin/ckan
 
 # Setup CKAN
 RUN ckan-pip install setuptools==44.1.0
 RUN ckan-pip install --upgrade pip
-RUN ckan-pip install -e 'git+https://github.com/ckan/ckan.git@ckan-2.9.0#egg=ckan[requirements]'
+RUN ckan-pip install -e 'git+https://github.com/fwoerister/ckan.git@2.9#egg=ckan[requirements]'
 
 COPY ckan/ckan-entrypoint.sh ./ckan-entrypoint.sh
 RUN dos2unix ./ckan-entrypoint.sh
@@ -65,13 +64,17 @@ RUN ckan-pip install -e git+https://github.com/ckan/ckanext-harvest.git@master#e
 RUN ckan-pip install -r /usr/lib/ckan/venv/src/ckanext-harvest/pip-requirements.txt --use-feature=2020-resolver
 
 # install dcat plugin
-
 RUN ckan-pip install -e git+https://github.com/ckan/ckanext-dcat.git@master#egg=ckanext-dcat
 RUN ckan-pip install -r /usr/lib/ckan/venv/src/ckanext-dcat/requirements.txt --use-feature=2020-resolver
 
+# install zippreview plugin
+RUN ckan-pip install -e git+https://github.com/fwoerister/ckanext-zippreview.git@fw/bugfix#egg=ckanext-zippreview
+
 # install mongodatastore plugin
 RUN ckan-pip install -e git+https://github.com/fwoerister/ckanext-mongodatastore.git#egg=ckanext-mongodatastore
-RUN ckan-pip install -r /usr/lib/ckan/venv/src/ckanext-mongodatastore/requirements.txt --use-feature=2020-resolver
+RUN ckan-pip install -r /usr/lib/ckan/venv/src/ckanext-mongodatastore/requirements.txt
+
+RUN ckan-pip install flask-debugtoolbar
 
 USER ckan
 EXPOSE 5000
