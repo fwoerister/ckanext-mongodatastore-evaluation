@@ -1,6 +1,5 @@
 # See CKAN docs on installation from Docker Compose on usage
-FROM debian:jessie
-MAINTAINER Open Knowledge
+FROM ubuntu:20.04
 
 # Install required system packages
 RUN ln -fs /usr/share/zoneinfo/UTC /etc/localtime
