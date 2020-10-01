@@ -1,8 +1,4 @@
-# DESCRIPTION
-# Update exsting records of an datastore resource.
-
 import evaluation.util.ckan as ckan
-import evaluation.util.env as env
 import evaluation.util.mongodb as mongodb
 from evaluation.tests import GenericFunctionalTest
 from evaluation.tests.functional.static_test_assets import PACKAGE, RESOURCE_FILE_LOCATION, MODIFIED_RECORD
@@ -27,6 +23,7 @@ class ModifyRecordFunctionalTest(GenericFunctionalTest):
         ckan.verify_record_with_id_exists(self._resource_id, 1)
 
     def _execute_steps(self):
+        self.logger.info("update record...")
         ckan.client.action.datastore_upsert(resource_id=self._resource_id, force=True, records=[MODIFIED_RECORD],
                                             method='upsert')
 

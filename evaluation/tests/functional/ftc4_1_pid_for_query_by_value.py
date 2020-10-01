@@ -1,10 +1,6 @@
-# DESCRIPTION
-# In this testcase a query is submitted to the datastore that retrieves all records where a specific
-# field exactly matches the provided parameter. For the resulting datasets a PID is issued.
 from time import sleep
 
 import evaluation.util.ckan as ckan
-import evaluation.util.env as env
 import evaluation.util.hash as hash
 from evaluation.tests import GenericFunctionalTest
 from evaluation.tests.functional.static_test_assets import PACKAGE, RESOURCE_FILE_LOCATION
@@ -30,11 +26,13 @@ class PidForQueryByValueFunctionalTest(GenericFunctionalTest):
                                                                    'datastore_active': True})
 
     def _execute_steps(self):
+        self.logger.info("issue pid...")
         self._pid = ckan.client.action.issue_pid(resource_id=self._resource_id, statement={'Country': 'Austria'})
 
-        sleep(5)
         self.logger.info("wait 5 seconds for background job to finish...")
+        sleep(5)
 
+        self.logger.info("re-execute stored query...")
         self._stored_query_results.append(ckan.client.action.querystore_resolve(id=self._pid))
 
         new_record = {'id': 1278, 'Country': 'Australia', 'Year': 2010, 'Debt': 101136.25205, 'RGDP': None, 'GDP': None,
@@ -42,8 +40,11 @@ class PidForQueryByValueFunctionalTest(GenericFunctionalTest):
                       'RGDP2': 1100661, 'GDPI1': None, 'GDPI2': None, 'Infl': '1.629', 'Debt1': None, 'Debt2': None,
                       'Debtalt': None, 'GDP2alt': None, 'GDPalt': None, 'RGDP2alt': None, 'debtgdp': 8.41826984160015,
                       'GDP3': None, 'GNI': None, 'lRGDP': None, 'lRGDP1': None, 'lRGDP2': 1092660}
+
+        self.logger.info("modify resource...")
         ckan.client.action.datastore_upsert(resource_id=self._resource_id, records=[new_record], method='insert',
                                             force=True)
+        self.logger.info("re-execute stored query...")
         self._stored_query_results.append(ckan.client.action.querystore_resolve(id=self._pid))
 
         new_record = {'id': 1, 'Country': 'Australia', 'Year': 2001, 'Debt': None, 'RGDP': None, 'GDP': None,
@@ -52,11 +53,16 @@ class PidForQueryByValueFunctionalTest(GenericFunctionalTest):
                       'Debtalt': None, 'GDP2alt': None, 'GDPalt': None, 'RGDP2alt': 1234, 'debtgdp': None,
                       'GDP3': None, 'GNI': None, 'lRGDP': 1234, 'lRGDP1': None, 'lRGDP2': None}
 
+        self.logger.info("modify resource...")
         ckan.client.action.datastore_upsert(resource_id=self._resource_id, records=[new_record], method='upsert',
                                             force=True)
+        self.logger.info("re-execute stored query...")
         self._stored_query_results.append(ckan.client.action.querystore_resolve(id=self._pid))
 
+        self.logger.info("delete resource...")
         ckan.client.action.datastore_delete(resource_id=self._resource_id, filters={'Country': 'Japan'}, force=True)
+
+        self.logger.info("re-execute stored query...")
         self._stored_query_results.append(ckan.client.action.querystore_resolve(id=self._pid))
 
     def _check_postcondition(self):

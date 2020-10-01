@@ -1,12 +1,4 @@
-# DESCRIPTION
-# The objective of this tests case is to evaluate the publication feature
-# of the proposed system by uploading the datasets of the Reinhard & Rogoff
-# experiment to it. This will also cover the publication of the related metadata
-# of the published datasets.
-
 from time import sleep
-
-import requests
 
 import evaluation.util.ckan as ckan
 import evaluation.util.solr as solr
@@ -26,13 +18,14 @@ class PublishResourceFunctionalTest(GenericFunctionalTest):
 
     def _execute_steps(self):
         self.logger.debug("execute test steps...")
+        self.logger.info("create package...")
         package = ckan.client.action.package_create(name='rr-dataset', title='Reinhard&Rogoff Datasets',
                                                     private=False,
                                                     owner_org='tu-wien',
                                                     author='Carmen Reinhart; Kenneth Rogoff',
                                                     maintainer='', license='other-open',
                                                     extras=[{'key': 'year', 'value': '2010'}])
-
+        self.logger.info("create resource...")
         self._resource = ckan.client.action.resource_create(package_id=package['id'],
                                                             name='countries_dataset.csv',
                                                             upload=open('data/datasets/countries_dataset.csv', 'r'))

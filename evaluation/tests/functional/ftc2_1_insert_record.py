@@ -1,6 +1,3 @@
-# DESCRIPTION
-# Insert new records to an existing datastore resource.
-
 import evaluation.util.ckan as ckan
 import evaluation.util.mongodb as mongodb
 from evaluation.tests import GenericFunctionalTest
@@ -25,6 +22,7 @@ class InsertRecordFunctionalTest(GenericFunctionalTest):
                                                                    'datastore_active': True})
 
     def _execute_steps(self):
+        self.logger.info("insert record...")
         ckan.client.action.datastore_upsert(resource_id=self._resource_id, force=True, records=[NEW_RECORD],
                                             method='insert')
 

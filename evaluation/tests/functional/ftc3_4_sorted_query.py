@@ -1,9 +1,4 @@
-# DESCRIPTION
-# In this testcase a query is submitted to the datastore that retrieves all
-# records sorted by a defined column.
-
 import evaluation.util.ckan as ckan
-import evaluation.util.env as env
 import evaluation.util.hash as hash
 
 from evaluation.tests import GenericFunctionalTest
@@ -28,6 +23,7 @@ class SortedQueryFunctionalTest(GenericFunctionalTest):
                                                                    'datastore_active': True})
 
     def _execute_steps(self):
+        self.logger.info("submit query...")
         self._query_result = ckan.client.action.datastore_search(resource_id=self._resource_id,
                                                                  filters={'Country': 'France'},
                                                                  sort="Dept asc", offset=0, limit=130)
