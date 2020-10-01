@@ -19,7 +19,7 @@ logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
 
 TRACE_TEST_ASSETS_DOI = '10.5281/zenodo.4058379'
-REINHART_AND_ROGOFF_TEST_ASSETS_DOI = '10.5281/zenodo.4058409'
+REINHART_AND_ROGOFF_TEST_ASSETS_DOI = '10.5281/zenodo.4058485'
 
 parser = argparse.ArgumentParser(description='Run the evaluation experiments of the ckanext-mongodatastore project')
 parser.add_argument('tag', type=str, help='A tag that is included in the name of the results folder')
@@ -120,6 +120,7 @@ def main():
 
     retrieve_test_assets(REINHART_AND_ROGOFF_TEST_ASSETS_DOI, {
         'countries_dataset.csv': 'data/datasets/countries_dataset.csv',
+        'paper.pdf': 'data/datasets/paper.pdf',
         'RR_cli.R': 'data/scripts/cli/RR.R',
         'RR_modified.R': ['data/scripts/cli/RR_modified.R', 'data/scripts/restapi/RR_modified.R'],
         'run_experiment.sh': 'data/scripts/cli/run_experiment.sh',

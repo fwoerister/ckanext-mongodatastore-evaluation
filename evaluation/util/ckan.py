@@ -49,7 +49,7 @@ def reset_package_to_initial_state(package, resource_file):
     resource = client.action.resource_create(package_id=package['id'],
                                              name=os.path.basename(resource_file), upload=open(resource_file, 'r'))
 
-    sleep(5)
+    sleep(10)
 
     return resource['id']
 

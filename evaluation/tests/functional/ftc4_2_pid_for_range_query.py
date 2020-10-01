@@ -26,8 +26,8 @@ class PidForRangeQueryFunctionalTest(GenericFunctionalTest):
         ckan.verify_if_organization_exists('tu-wien')
         ckan.reset_package_to_initial_state(PACKAGE, RESOURCE_FILE_LOCATION)
 
-        ckan.verify_package_does_exist('rr-experiment')
-        self._resource_id = ckan.verify_package_contains_resource('rr-experiment',
+        ckan.verify_package_does_exist('rr-dataset')
+        self._resource_id = ckan.verify_package_contains_resource('rr-dataset',
                                                                   {'name': 'countries_dataset.csv',
                                                                    'datastore_active': True})
 

@@ -45,7 +45,7 @@ class GenericFunctionalTest(GenericTest, ABC):
 
     def run(self, tag):
         super(GenericFunctionalTest, self).run(tag)
-        self.logger.info(f"⏳ Start execution of '{self.name}' ⏳ ")
+        self.logger.info(f"⏳ Start execution of '{self.name}'")
 
         self.logger.info("check preconditions...")
         self._check_precondition()
@@ -59,7 +59,7 @@ class GenericFunctionalTest(GenericTest, ABC):
         self._check_postcondition()
         self.logger.info("postconditions are fulfilled")
 
-        self.logger.info(f"🎉 🎉 🎉 '{self.name}' successfully executed 🎉 🎉 🎉")
+        self.logger.info(f"🎉 '{self.name}' successfully executed")
 
 
 class GenericNonFunctionalTest(GenericTest, ABC):
@@ -87,7 +87,7 @@ class GenericNonFunctionalTest(GenericTest, ABC):
 
     def run(self, tag):
         super(GenericNonFunctionalTest, self).run(tag)
-        self.logger.info(f"⏳ Start execution of '{self.name}' ⏳ ")
+        self.logger.info(f"⏳ Start execution of '{self.name}'")
 
         self.logger.info("check preconditions...")
         self._prepare_preconditions()
@@ -113,9 +113,9 @@ class GenericNonFunctionalTest(GenericTest, ABC):
                     self.logger.info(f'{str(line_count).rjust(8, " ")} records uploaded')
 
                     if line_count % self._test_interval == 0:
-                        self.logger.info('📈 perform evaluation 📈 ')
+                        self.logger.info('📈 perform evaluation')
                         self._do_evaluation()
-                        self.logger.info('evaluation done ✅ ')
+                        self.logger.info(' ✅ evaluation done')
 
                     records = []
 
@@ -130,10 +130,10 @@ class GenericNonFunctionalTest(GenericTest, ABC):
                               'a') as file:
                         file.writelines(f'{response_time}\n')
 
-                self.logger.info(f'📈 perform evaluation - ({line_count} records uploaded) 📈 ')
+                self.logger.info(f'📈 perform evaluation - ({line_count} records uploaded)')
                 self._do_evaluation()
-                self.logger.info('evaluation done ✅ ')
+                self.logger.info(' ✅ evaluation done')
 
         self._after_upload()
 
-        self.logger.info(f"🎉 '{self.name}' successfully executed 🎉 ")
+        self.logger.info(f"🎉 '{self.name}' successfully executed")

@@ -32,14 +32,14 @@ class GitlabUtil():
     def verify_project_exists(self, name):
         if self.gl is None:
             self.__init_client()
-            
+
         projects = self.gl.projects.list()
 
         for project in projects:
             project.delete()
 
         sleep(1)
-        self.gl.projects.create({'name': name})
+        self.gl.projects.create({'name': name, 'visibility': 'public'})
 
 
 class GitUtil:
