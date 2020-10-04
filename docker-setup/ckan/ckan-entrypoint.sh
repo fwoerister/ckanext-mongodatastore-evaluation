@@ -50,11 +50,9 @@ write_config () {
     "ckan.datastore.read_url = ${CKAN_DATASTORE_MG_READ_URL}" \
     "ckan.site_url = ${CKAN_SITE_URL}" \
     "ckan.site_id = ${CKAN_SITE_ID}" \
-    "ckan.plugins = stats text_view image_view datapusher datastore mongodatastore reclinecitationview landingpageview harvest ckan_harvester dcat dcat_rdf_harvester dcat_json_harvester dcat_json_interface structured_data zip_view" \
-    "ckan.views.default_views = image_view text_view reclinecitation_view landingpage_view zip_view"
+    "ckan.plugins = stats text_view image_view datapusher datastore mongodatastore reclinecitationview landingpageview archiveview dcat dcat_json_interface structured_data " \
+    "ckan.views.default_views = image_view text_view reclinecitation_view landingpage_view archive_view"
 
-  sed -i 's/debug = false/debug = true/g' "$CONFIG"
-  sed -i 's/level = WARNING/level = DEBUG/g' "$CONFIG"
 
   sed "/\[app:main\]/a ckanext.mongodatastore.mongodb_url=${CKAN_DATASTORE_MG_WRITE_URL}" "$CONFIG" -i.bkp
   sed "/\[app:main\]/a ckanext.mongodatastore.querystore_url=${CKAN_QUERYSTORE_URL}" "$CONFIG" -i.bkp
@@ -110,6 +108,6 @@ psql -U ckan -h db -d ckan -c "INSERT INTO public.group (id, name, title, descri
 
 # install mongodatastore
 cd /usr/lib/ckan/venv/src/ckanext-mongodatastore
-ckan -c "${CKAN_CONFIG}/production.ini" create_schema
+ckan -c "${CKAN_CONFIG}/production.ini" mongodatastore_create_schema
 
 exec "$@"

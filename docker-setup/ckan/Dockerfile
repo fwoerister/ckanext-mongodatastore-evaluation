@@ -48,7 +48,7 @@ RUN mkdir -p $CKAN_VENV $CKAN_CONFIG $CKAN_STORAGE_PATH && \
 # Setup CKAN
 RUN ckan-pip install setuptools==44.1.0
 RUN ckan-pip install --upgrade pip
-RUN ckan-pip install -e 'git+https://github.com/fwoerister/ckan.git@2.9#egg=ckan[requirements]'
+RUN ckan-pip install -e 'git+https://github.com/fwoerister/ckan.git@5632-fixReloaderOption#egg=ckan[requirements]'
 
 COPY ckan/ckan-entrypoint.sh ./ckan-entrypoint.sh
 RUN dos2unix ./ckan-entrypoint.sh
@@ -59,16 +59,13 @@ RUN ckan-pip install -U pip && \
     chmod +x /ckan-entrypoint.sh && \
     chown -R ckan:ckan $CKAN_HOME $CKAN_VENV $CKAN_CONFIG $CKAN_STORAGE_PATH
 
-# install harvest plugin
-RUN ckan-pip install -e git+https://github.com/ckan/ckanext-harvest.git@v1.3.1#egg=ckanext-harvest
-RUN ckan-pip install -r /usr/lib/ckan/venv/src/ckanext-harvest/pip-requirements.txt
-
 # install dcat plugin
-RUN ckan-pip install -e git+https://github.com/ckan/ckanext-dcat.git@v1.1.0#egg=ckanext-dcat
+RUN ckan-pip install -e git+https://github.com/ckan/ckanext-dcat.git@master#egg=ckanext-dcat
 RUN ckan-pip install -r /usr/lib/ckan/venv/src/ckanext-dcat/requirements.txt
 
-# install zippreview plugin
-RUN ckan-pip install -e git+https://github.com/fwoerister/ckanext-zippreview.git@fw/bugfix#egg=ckanext-zippreview
+# install archiveview plugin
+RUN ckan-pip install -e git+https://github.com/fwoerister/ckanext-archiveview.git#egg=ckanext-archiveview
+RUN ckan-pip install -r /usr/lib/ckan/venv/src/ckanext-archiveview/requirements.txt
 
 # install mongodatastore plugin
 RUN ckan-pip install -e git+https://github.com/fwoerister/ckanext-mongodatastore.git#egg=ckanext-mongodatastore
@@ -80,4 +77,4 @@ USER ckan
 EXPOSE 5000
 
 ENTRYPOINT ["/ckan-entrypoint.sh"]
-CMD ["ckan","-c","/etc/ckan/production.ini", "run", "--host", "0.0.0.0"]
+CMD ["ckan","-c","/etc/ckan/production.ini", "run", "--host", "0.0.0.0", "--disable-reloader"]

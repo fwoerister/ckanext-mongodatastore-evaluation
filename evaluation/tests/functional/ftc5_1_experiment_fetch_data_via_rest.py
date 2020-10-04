@@ -51,7 +51,7 @@ class ExperimentRestFunctionalTest(GenericFunctionalTest):
         git_util.tag_repository('1.0')
 
         code_pid = handle.client.put_handle_for_urls(
-            {'URL': 'http://localhost:8081/root/rr-experiment/-/archive/1.0/rr-experiment-1.0.zip'}
+            {'URL': 'http://gitlab:8081/root/rr-experiment/-/archive/1.0/rr-experiment-1.0.zip'}
         ).json().get('handle')
 
         # 5) Run the experiment + 6) Calculate a md5 hash value of the results
@@ -80,7 +80,7 @@ class ExperimentRestFunctionalTest(GenericFunctionalTest):
 
         ckan.client.action.resource_create(package_id=package['id'],
                                            name='Experiment Source Code',
-                                           url=f'http://localhost:8000/{code_pid}',
+                                           url=f'http://handle_server:8000/{code_pid}',
                                            format='zip')
 
         # 8) Modify the dataset in the CKAN repository
