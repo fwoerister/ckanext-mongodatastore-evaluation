@@ -36,8 +36,40 @@ docker build -t evaluation .
 Next, use following command to execute a specific test case:
 
 ```
-docker run -it --network host -v results:/opt/evaluation/results  evaluation python run_testcases.py [TESTRUN TAG] --functional 1.1
+docker run -it --network host -v `pwd`/results:/opt/evaluation/results  evaluation python run_testcases.py functional --functional
 ```
+
+To only execute the functional test cases use the argument `--functional`. This argument also accepts a list of test case numbers, e.g. `--functional 1.1 2.1 3.2`. To execute specific non-functional test cases, use the `--nonfunctional 1 2` switch.
+
+Available test cases:
+
+### Functional:
+
+| Identify  | Descripition |
+| --------  | -------------|
+| 1.1       | Upload of a CSV file to the repository along with its metadata             |
+| 2.1       | Inserting new records to an CKAN resource             |
+| 2.2       | Modification of a record in an CKAN resource             |
+| 2.3       | Deletion of a record in an CKAN resource            |
+| 3.1       | Querying the current state of an CKAN resource by exact value             |
+| 3.2       | Querchying the current state of an CKAN resource by defining a range on a specific field (range query)             |
+| 3.3       | Fulltext Query on an CKAN resource            |
+| 3.4       | Query with defined sort order on an CKAN resource             |
+| 4.1       | Creation and retrieval of an persistently identified subset of an CKAN resource (defined by an exact filter condition)             |
+| 4.2       | Creation and retrieval of an persistently identified subset of an CKAN resource (defined by range query)             |
+| 4.3       | Creation and retrieval of an persistently identified subset of an CKAN resource (defined by fulltext query)             |
+| 4.4       | Creation and retrieval of an persistently identified subset of an CKAN resource (defined query with sort order)             |
+| 5.1       | Persistently identify an computational experiment and the datasubset (using the REST API) it is based on + Publishing of both PIDs in CKAN along with related metadata             |
+| 5.2       | Persistently identify an computational experiment and the datasubset (using the CLI tool) it is based on + Publishing of both PIDs in CKAN along with related metadata             |
+
+### Non-Functional:
+
+| Identify  | Descripition |
+| --------  | -------------|
+| 1         | Examine the Query Response Time on Current State |
+| 2         | Examing the Query Response Time on Non-Versioned MongoDB Collections             |
+| 3         | Examine Retrieval Time of Stored Queries              |
+| 4         | Examine the Impact of Indexing              |
 
 ## Generating the Diagrams
 To generate the diagrams, put the result files from previous testruns into the charts folder and execute following command:
