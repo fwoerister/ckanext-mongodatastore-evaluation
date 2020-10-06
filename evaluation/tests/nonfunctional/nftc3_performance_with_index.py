@@ -8,7 +8,6 @@ from time import sleep
 import numpy
 
 import evaluation.util.ckan as ckan
-import evaluation.util.env as env
 import evaluation.util.mongodb as mongodb
 import evaluation.util.postgresql as postgresql
 from evaluation.tests import GenericNonFunctionalTest
@@ -18,16 +17,17 @@ RESULT_FILE_HEADER = 'index;no index\n'
 
 class PerformanceIndexUsage(GenericNonFunctionalTest):
 
-    def __init__(self, results_dir, name, dataset, chunksize, test_interval):
+    def __init__(self, results_dir, name, dataset, chunksize, test_interval, db_type='mongodb'):
         super(PerformanceIndexUsage, self).__init__(results_dir, name, dataset, chunksize, test_interval)
         self._queries = None
+        self._db_type = db_type
 
     def _prepare_preconditions(self):
         ckan.verify_if_evaluser_exists()
         ckan.verify_if_organization_exists('tu-wien')
 
         ckan.ensure_package_does_not_exist('ucbtrace')
-        if env.container_runs('mongodb'):
+        if self._db_type == 'mongodb':
             mongodb.purge_indexes('CKAN_Datastore')
 
         package = ckan.client.action.package_create(name='ucbtrace', title='UC Berkeley Home IP Web Traces',
@@ -59,7 +59,7 @@ class PerformanceIndexUsage(GenericNonFunctionalTest):
                                                    repeat=1,
                                                    number=1))
 
-        if env.container_runs('mongodb'):
+        if self._db_type == 'mongodb':
             mongodb.purge_index(self._resource_id, 'client_port_index')
         else:
             postgresql.remove_index(self._resource_id, 'client_port')
