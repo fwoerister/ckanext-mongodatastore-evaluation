@@ -134,35 +134,45 @@ services:
   # https://github.com/chefsplate/mongo-shard-docker-compose/
   mdb-config:
     container_name: mdb-config
-    image: mongo:4.4.0-bionic
+    build:
+      context: mongodb
+      dockerfile: Dockerfile
     command: mongod --port 27017 --configsvr --replSet configserver --oplogSize 16 --bind_ip_all
     entrypoint: ["/scripts/setup-config.sh"]
     volumes:
       - ./mongodb/scripts:/scripts
   mdb-shard01:
     container_name: mdb-shard01
-    image: mongo:4.4.0-bionic
+    build:
+      context: mongodb
+      dockerfile: Dockerfile
     command: mongod --port 27018 --shardsvr --replSet shard01 --oplogSize 16 --bind_ip_all --wiredTigerCacheSizeGB 5
     entrypoint: ["/scripts/setup-shard01.sh"]
     volumes:
       - ./mongodb/scripts:/scripts
   mdb-shard02:
     container_name: mdb-shard02
-    image: mongo:4.4.0-bionic
+    build:
+      context: mongodb
+      dockerfile: Dockerfile
     command: mongod --port 27019 --shardsvr --replSet shard02 --oplogSize 16 --bind_ip_all --wiredTigerCacheSizeGB 5
     entrypoint: ["/scripts/setup-shard02.sh"]
     volumes:
       - ./mongodb/scripts:/scripts
   mdb-shard03:
     container_name: mdb-shard03
-    image: mongo:4.4.0-bionic
+    build:
+      context: mongodb
+      dockerfile: Dockerfile
     command: mongod --port 27020 --shardsvr --replSet shard03 --oplogSize 16 --bind_ip_all --wiredTigerCacheSizeGB 5
     entrypoint: ["/scripts/setup-shard03.sh"]
     volumes:
       - ./mongodb/scripts:/scripts
   mdb-shard04:
     container_name: mdb-shard04
-    image: mongo:4.4.0-bionic
+    build:
+      context: mongodb
+      dockerfile: Dockerfile
     command: mongod --port 27021 --shardsvr --replSet shard04 --oplogSize 16 --bind_ip_all --wiredTigerCacheSizeGB 5
     entrypoint: ["/scripts/setup-shard04.sh"]
     volumes:
@@ -170,7 +180,9 @@ services:
 
   mongodb:
     container_name: mongodb
-    image: mongo:4.4.0-bionic
+    build:
+      context: mongodb
+      dockerfile: Dockerfile
     command: mongos --port 27017 --configdb configserver/mdb-config:27017 --bind_ip_all
     entrypoint: ["/scripts/setup-router4shards.sh"]
     ports:
