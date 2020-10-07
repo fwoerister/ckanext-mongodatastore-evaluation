@@ -1,3 +1,4 @@
+import os
 from time import sleep
 
 from evaluation.tests import GenericFunctionalTest
@@ -16,6 +17,8 @@ class ExperimentRestFunctionalTest(GenericFunctionalTest):
         self._resource_id = None
 
     def _check_precondition(self):
+        os.makedirs('gitrepository', exist_ok=True)
+
         GitUtil.purge_repository()
         self._resource_id = ckan.reset_package_to_initial_state(PACKAGE, RESOURCE_FILE_LOCATION)
 
