@@ -104,7 +104,7 @@ ckan -c "${CKAN_CONFIG}/production.ini" db init
 # evaluser:passme123
 psql -U ckan -h db -d ckan -c "INSERT INTO public.user (id, name, apikey, created, about, password, fullname, email, reset_key, sysadmin, activity_streams_email_notifications, state) VALUES ('ff7f6a70-605f-4ad2-b70c-7d70b0fb6c30', 'evaluser', '302b24d4-8a23-47bd-baef-b8e8236d27a3', '2020-03-20 11:11:50.794895', null, '\$pbkdf2-sha512\$25000\$fm8N4VyrtbZWyhnDWEspZQ\$PUKHskPZazAKOMOaM/WMCG7q7DHAQExf9ux.K.QyGFmXxQ.7UDPQsY3b6qgQHD3wOSEl5lSKLKlzhBZBmJGPCw', null, 'evaluser@localhost', null, true, false, 'active') on conflict do nothing;"
 psql -U ckan -h db -d ckan -c "INSERT INTO public.revision (id, timestamp, author, message, state, approved_timestamp) VALUES ('56318b3e-f0d6-45cc-bd16-d3a9077ad6fb', '2020-03-23 09:11:49.620416', 'evaluser', '', 'active', null) on conflict do nothing;"
-psql -U ckan -h db -d ckan -c "INSERT INTO public.group (id, name, title, description, created, state, type, approval_status, image_url, is_organization) VALUES('16448db4-f48d-4b74-a29c-abac472ed945', 'tu-wien', 'tu-wien', '', '2020-09-29 02:20:09.589', 'active', 'organization', 'approved', '', true);"
+psql -U ckan -h db -d ckan -c "INSERT INTO public.group (id, name, title, description, created, state, type, approval_status, image_url, is_organization) VALUES('16448db4-f48d-4b74-a29c-abac472ed945', 'tu-wien', 'tu-wien', '', '2020-09-29 02:20:09.589', 'active', 'organization', 'approved', '', true) on conflict do nothing;"
 
 # install mongodatastore
 cd /usr/lib/ckan/venv/src/ckanext-mongodatastore

@@ -139,8 +139,7 @@ services:
       dockerfile: Dockerfile
     command: mongod --port 27017 --configsvr --replSet configserver --oplogSize 16 --bind_ip_all
     entrypoint: ["/scripts/setup-config.sh"]
-    volumes:
-      - ./mongodb/scripts:/scripts
+
   mdb-shard01:
     container_name: mdb-shard01
     build:
@@ -148,8 +147,7 @@ services:
       dockerfile: Dockerfile
     command: mongod --port 27018 --shardsvr --replSet shard01 --oplogSize 16 --bind_ip_all --wiredTigerCacheSizeGB 5
     entrypoint: ["/scripts/setup-shard01.sh"]
-    volumes:
-      - ./mongodb/scripts:/scripts
+
   mdb-shard02:
     container_name: mdb-shard02
     build:
@@ -157,8 +155,7 @@ services:
       dockerfile: Dockerfile
     command: mongod --port 27019 --shardsvr --replSet shard02 --oplogSize 16 --bind_ip_all --wiredTigerCacheSizeGB 5
     entrypoint: ["/scripts/setup-shard02.sh"]
-    volumes:
-      - ./mongodb/scripts:/scripts
+
   mdb-shard03:
     container_name: mdb-shard03
     build:
@@ -166,8 +163,7 @@ services:
       dockerfile: Dockerfile
     command: mongod --port 27020 --shardsvr --replSet shard03 --oplogSize 16 --bind_ip_all --wiredTigerCacheSizeGB 5
     entrypoint: ["/scripts/setup-shard03.sh"]
-    volumes:
-      - ./mongodb/scripts:/scripts
+
   mdb-shard04:
     container_name: mdb-shard04
     build:
@@ -175,8 +171,7 @@ services:
       dockerfile: Dockerfile
     command: mongod --port 27021 --shardsvr --replSet shard04 --oplogSize 16 --bind_ip_all --wiredTigerCacheSizeGB 5
     entrypoint: ["/scripts/setup-shard04.sh"]
-    volumes:
-      - ./mongodb/scripts:/scripts
+
 
   mongodb:
     container_name: mongodb
@@ -187,8 +182,7 @@ services:
     entrypoint: ["/scripts/setup-router4shards.sh"]
     ports:
       - "27017:27017"
-    volumes:
-      - ./mongodb/scripts:/scripts
+
     depends_on:
       - mdb-config
       - mdb-shard01
