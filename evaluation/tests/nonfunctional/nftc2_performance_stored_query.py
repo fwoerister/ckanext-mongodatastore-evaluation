@@ -21,8 +21,8 @@ class PerformanceStoredQueryTest(GenericNonFunctionalTest):
 
     def __init__(self, results_dir, name, dataset, chunksize, test_interval):
         super().__init__(results_dir, name, dataset, chunksize, test_interval)
-        self._filter_pids = []
-        self._fulltext_pids = []
+        self._filter_ids = []
+        self._fulltext_ids = []
         self._resource_id = None
 
     def _prepare_preconditions(self):
@@ -65,12 +65,12 @@ class PerformanceStoredQueryTest(GenericNonFunctionalTest):
         fulltext_queries = ['GET', 'gif', 'html']
 
         for query in filter_queries:
-            self._filter_pids.append(ckan.client.action.issue_pid(resource_id=self._resource_id,
-                                                                  statement=query))
+            self._filter_ids.append(ckan.client.action.issue_pid(resource_id=self._resource_id,
+                                                                 statement=query))
 
         for query in fulltext_queries:
-            self._fulltext_pids.append(ckan.client.action.issue_pid(resource_id=self._resource_id,
-                                                                    q=query))
+            self._fulltext_ids.append(ckan.client.action.issue_pid(resource_id=self._resource_id,
+                                                                   q=query))
 
         with open(os.path.join(self.results_dir, 'csv', f'{self.tag}_nftc2_response_times.csv'), 'a') as result_file:
             result_file.writelines(RESULT_FILE_HEADER)
@@ -79,13 +79,13 @@ class PerformanceStoredQueryTest(GenericNonFunctionalTest):
         filter_results = []
         fulltext_results = []
 
-        for pid in self._filter_pids:
-            filter_results.append(timeit.repeat(lambda: ckan.client.action.querystore_resolve(pid=pid, limit=100),
+        for internal_id in self._filter_ids:
+            filter_results.append(timeit.repeat(lambda: ckan.client.action.querystore_resolve(id=internal_id, limit=100),
                                                 repeat=1,
                                                 number=1))
 
-        for pid in self._fulltext_pids:
-            fulltext_results.append(timeit.repeat(lambda: ckan.client.action.querystore_resolve(pid=pid, limit=100),
+        for internal_id in self._fulltext_ids:
+            fulltext_results.append(timeit.repeat(lambda: ckan.client.action.querystore_resolve(id=internal_id, limit=100),
                                                   repeat=1,
                                                   number=1))
 
