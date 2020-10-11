@@ -16,6 +16,8 @@ The folder `docker-setup` contains following docker-compose files:
 | `docker-compose.5shards.yml` | Setup using the novel datastore implementation based on a MongoDB (using 5shards) |
 | `docker-compose.6shards.yml` | Setup using the novel datastore implementation based on a MongoDB (using 6shards) |
 
+__REMARK: Before running the docker-compose file, rename the file `.env-template` to `.env`
+
 __REMARK: Due to the fact, that the datapusher is running inside a container, the base_url of the CKAN instance has to be set to the container name (i.e. http://ckan:5000). Therefore this hostname has to be added to the hosts file before execution of the test cases. (/etc/hosts for linux systems and C:\Windows\system32\drivers\etc\hosts for Windows systems)__
 
 To start the complete system, execute this command:
