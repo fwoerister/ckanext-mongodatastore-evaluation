@@ -19,7 +19,7 @@ logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
 
 TRACE_TEST_ASSETS_DOI = '10.5281/zenodo.4058379'
-REINHART_AND_ROGOFF_TEST_ASSETS_DOI = '10.5281/zenodo.4072334'
+REINHART_AND_ROGOFF_TEST_ASSETS_DOI = '10.5281/zenodo.4082020'
 
 parser = argparse.ArgumentParser(description='Run the evaluation experiments of the ckanext-mongodatastore project')
 parser.add_argument('tag', type=str, help='A tag that is included in the name of the results folder')

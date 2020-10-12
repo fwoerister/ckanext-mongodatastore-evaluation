@@ -15,4 +15,4 @@ setuptools~=49.6.0
 matplotlib~=3.3.1
 pyzenodo3~=1.0.2
 easyhandle~=0.0.5
-ckandf~=0.5
+ckanfetch~=0.2
