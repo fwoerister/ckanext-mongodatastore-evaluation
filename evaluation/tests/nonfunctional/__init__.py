@@ -13,9 +13,9 @@ NON_FUNCTIONAL_TESTS = {}
 def initialize(results_dir):
     NON_FUNCTIONAL_TESTS.update({
         '1': PerformanceQueryCurrentStateTest(results_dir, 'nftc1_performance_query_current_state',
-                                              TRACE_DATASET, 10000, 500000),
+                                              TRACE_DATASET, 10000, 500000, testcase_name='nftc1'),
         '2': PerformanceNonVersionedMongoResource(results_dir, 'nftc2_performance_non_versioned_mongodb',
-                                                  TRACE_DATASET, 10000, 500000),
+                                                  TRACE_DATASET, 10000, 500000, testcase_name='nftc2'),
         '3': PerformanceStoredQueryTest(results_dir, 'nftc3_performance_stored_query',
                                         TRACE_REMAINING, 10000, 500000),
         '4.1': PerformanceIndexUsage(results_dir, 'nftc4_performance_with_index',
@@ -23,4 +23,3 @@ def initialize(results_dir):
         '4.2': PerformanceIndexUsage(results_dir, 'nftc4_performance_with_index',
                                    TRACE_DATASET, 10000, 500000, db_type='postgresql')
     })
-e

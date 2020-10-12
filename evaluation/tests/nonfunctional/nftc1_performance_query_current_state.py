@@ -37,9 +37,10 @@ def filter_query(resource_id, statement):
 
 class PerformanceQueryCurrentStateTest(GenericNonFunctionalTest):
 
-    def __init__(self, results_dir, name, dataset, chunk_size, test_interval):
+    def __init__(self, results_dir, name, dataset, chunk_size, test_interval, testcase_name='nftc1'):
         super(PerformanceQueryCurrentStateTest, self).__init__(results_dir, name, dataset, chunk_size, test_interval)
         self._resource_id = None
+        self._testcase_name = testcase_name
 
     def _prepare_preconditions(self):
         ckan.verify_if_evaluser_exists()
@@ -66,11 +67,11 @@ class PerformanceQueryCurrentStateTest(GenericNonFunctionalTest):
         self.filter_queries = self._random_query_generator.generate_random_queries(size=20)
         self.fulltext_queries = ['GET', 'gif', 'html']
 
-        with open(os.path.join(self.results_dir, 'csv', f'{self.tag}_nftc1_result.csv'), 'a') as result_file:
+        with open(os.path.join(self.results_dir, 'csv', f'{self.tag}_{self._testcase_name}_result.csv'), 'a') as result_file:
             result_file.writelines(RESULT_FILE_HEADER)
 
     def _do_evaluation(self):
-        with open(os.path.join(self.results_dir, 'csv', f'{self.tag}_nftc1_result.csv'), 'a') as result_file:
+        with open(os.path.join(self.results_dir, 'csv', f'{self.tag}_{self._testcase_name}_result.csv'), 'a') as result_file:
             filter_queries = list(
                 map(lambda query: functools.partial(filter_query, self._resource_id, query), self.filter_queries))
             filter_result = do_loadtest(filter_queries)

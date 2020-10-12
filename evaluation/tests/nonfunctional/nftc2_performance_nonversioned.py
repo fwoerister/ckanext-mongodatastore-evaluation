@@ -31,12 +31,13 @@ def nv_filter_query(resource_id, statement):
 
 class PerformanceNonVersionedMongoResource(PerformanceQueryCurrentStateTest):
 
-    def __init__(self, results_dir, name, dataset, chunk_size, test_interval):
+    def __init__(self, results_dir, name, dataset, chunk_size, test_interval, testcase_name):
         super(PerformanceNonVersionedMongoResource, self).__init__(results_dir, name, dataset, chunk_size,
-                                                                   test_interval)
+                                                                   test_interval, testcase_name)
 
     def _do_evaluation(self):
-        with open(os.path.join(self.results_dir, 'csv', f'{self.tag}_nftc2_result.csv'), 'a') as result_file:
+        with open(os.path.join(self.results_dir, 'csv', f'{self.tag}_{self._testcase_name}_result.csv'),
+                  'a') as result_file:
             nv_filter_queries = list(
                 map(lambda query: functools.partial(nv_filter_query, self._resource_id, query), self.filter_queries))
             nv_filter_result = do_loadtest(nv_filter_queries)
