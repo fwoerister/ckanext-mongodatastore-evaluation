@@ -47,7 +47,6 @@ class PerformanceQueryCurrentStateTest(GenericNonFunctionalTest):
         ckan.verify_if_organization_exists('tu-wien')
 
         ckan.ensure_package_does_not_exist('ucbtrace')
-        mongodb.purge_indexes('CKAN_Datastore')
 
         package = ckan.client.action.package_create(name='ucbtrace', title='UC Berkeley Home IP Web Traces',
                                                     private=False,
