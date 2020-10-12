@@ -23,3 +23,4 @@ def initialize(results_dir):
         '4.2': PerformanceIndexUsage(results_dir, 'nftc4_performance_with_index',
                                    TRACE_DATASET, 10000, 500000, db_type='postgresql')
     })
+e

@@ -84,7 +84,7 @@ class ExperimentCliFunctionalTest(GenericFunctionalTest):
 
         ckan.client.action.resource_create(package_id=package['id'],
                                            name='Experiment Source Code',
-                                           url=f'http://localhost:8000/{code_pid}',
+                                           url=f'http://handle_server:8000/{code_pid}',
                                            format='zip')
 
         # 8) Modify the dataset in the CKAN repository

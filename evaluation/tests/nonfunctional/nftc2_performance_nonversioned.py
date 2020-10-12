@@ -36,7 +36,7 @@ class PerformanceNonVersionedMongoResource(PerformanceQueryCurrentStateTest):
                                                                    test_interval)
 
     def _do_evaluation(self):
-        with open(os.path.join(self.results_dir, 'csv', f'{self.tag}_nftc1_result.csv'), 'a') as result_file:
+        with open(os.path.join(self.results_dir, 'csv', f'{self.tag}_nftc2_result.csv'), 'a') as result_file:
             nv_filter_queries = list(
                 map(lambda query: functools.partial(nv_filter_query, self._resource_id, query), self.filter_queries))
             nv_filter_result = do_loadtest(nv_filter_queries)

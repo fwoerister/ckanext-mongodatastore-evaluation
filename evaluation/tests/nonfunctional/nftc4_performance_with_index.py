@@ -70,6 +70,6 @@ class PerformanceIndexUsage(GenericNonFunctionalTest):
                                                repeat=1,
                                                number=1))
 
-        with open(os.path.join(self.results_dir, 'csv', f'{self.tag}_nftc3_response_times.csv'), 'a') as result_file:
+        with open(os.path.join(self.results_dir, 'csv', f'{self.tag}_nftc4_response_times.csv'), 'a') as result_file:
             result_file.writelines(RESULT_FILE_HEADER)
             result_file.writelines(f'{numpy.average(response_time_idx)};{numpy.average(response_time)}\n')

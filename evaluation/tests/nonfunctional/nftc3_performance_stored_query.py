@@ -72,7 +72,7 @@ class PerformanceStoredQueryTest(GenericNonFunctionalTest):
             self._fulltext_ids.append(ckan.client.action.issue_pid(resource_id=self._resource_id,
                                                                    q=query))
 
-        with open(os.path.join(self.results_dir, 'csv', f'{self.tag}_nftc2_response_times.csv'), 'a') as result_file:
+        with open(os.path.join(self.results_dir, 'csv', f'{self.tag}_nftc3_response_times.csv'), 'a') as result_file:
             result_file.writelines(RESULT_FILE_HEADER)
 
     def _do_evaluation(self):
@@ -89,5 +89,5 @@ class PerformanceStoredQueryTest(GenericNonFunctionalTest):
                                                   repeat=1,
                                                   number=1))
 
-        with open(os.path.join(self.results_dir, 'csv', f'{self.tag}_nftc2_response_times.csv'), 'a') as result_file:
+        with open(os.path.join(self.results_dir, 'csv', f'{self.tag}_nftc3_response_times.csv'), 'a') as result_file:
             result_file.writelines(f'{numpy.average(filter_results)};{numpy.average(fulltext_results)}\n')
