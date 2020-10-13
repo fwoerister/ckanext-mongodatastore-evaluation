@@ -60,11 +60,11 @@ RUN ckan-pip install -U pip && \
     chown -R ckan:ckan $CKAN_HOME $CKAN_VENV $CKAN_CONFIG $CKAN_STORAGE_PATH
 
 # install dcat plugin
-RUN ckan-pip install -e git+https://github.com/ckan/ckanext-dcat.git@master#egg=ckanext-dcat
+RUN ckan-pip install -e git+https://github.com/ckan/ckanext-dcat.git@6b7ec505f303fb18e0eebcebf67130d36b3dca82#egg=ckanext-dcat
 RUN ckan-pip install -r /usr/lib/ckan/venv/src/ckanext-dcat/requirements.txt
 
 # install archiveview plugin
-RUN ckan-pip install -e git+https://github.com/fwoerister/ckanext-archiveview.git#egg=ckanext-archiveview
+RUN ckan-pip install -e git+https://github.com/fwoerister/ckanext-archiveview.git@v0.0.2#egg=ckanext-archiveview
 RUN ckan-pip install -r /usr/lib/ckan/venv/src/ckanext-archiveview/requirements.txt
 
 # install mongodatastore plugin
