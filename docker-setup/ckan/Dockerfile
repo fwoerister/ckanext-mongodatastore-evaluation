@@ -68,7 +68,7 @@ RUN ckan-pip install -e git+https://github.com/fwoerister/ckanext-archiveview.gi
 RUN ckan-pip install -r /usr/lib/ckan/venv/src/ckanext-archiveview/requirements.txt
 
 # install mongodatastore plugin
-RUN ckan-pip install -e git+https://github.com/fwoerister/ckanext-mongodatastore.git#egg=ckanext-mongodatastore
+RUN ckan-pip install -e git+https://github.com/fwoerister/ckanext-mongodatastore.git@v0.4#egg=ckanext-mongodatastore
 RUN ckan-pip install -r /usr/lib/ckan/venv/src/ckanext-mongodatastore/requirements.txt
 
 RUN ckan-pip install flask-debugtoolbar
