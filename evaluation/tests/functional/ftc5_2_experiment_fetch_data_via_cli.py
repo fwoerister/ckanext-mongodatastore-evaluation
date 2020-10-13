@@ -55,7 +55,7 @@ class ExperimentCliFunctionalTest(GenericFunctionalTest):
         git_util.tag_repository('1.0')
 
         code_pid = handle.client.put_handle_for_urls(
-            {'URL': 'http://localhost:8081/root/rr-experiment/-/archive/1.0/rr-experiment-1.0.zip'}
+            {'URL': 'http://gitlab:8081/root/rr-experiment/-/archive/1.0/rr-experiment-1.0.zip'}
         ).json().get('handle')
 
         # 5) Run the experiment + 6) Calculate a md5 hash value of the results
